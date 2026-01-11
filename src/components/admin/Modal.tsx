@@ -1,5 +1,5 @@
-import { ReactNode, useEffect } from "react";
-import { X } from "lucide-react";
+import { ReactNode, useEffect, useState } from "react";
+import { X, Sparkles } from "lucide-react";
 
 interface ModalProps {
   open: boolean;
@@ -7,12 +7,16 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
+  icon?: ReactNode;
 }
 
-export function Modal({ open, onClose, title, children, size = "md" }: ModalProps) {
+export function Modal({ open, onClose, title, children, size = "md", icon }: ModalProps) {
+  const [isClosing, setIsClosing] = useState(false);
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+      setIsClosing(false);
     } else {
       document.body.style.overflow = "unset";
     }
@@ -23,13 +27,21 @@ export function Modal({ open, onClose, title, children, size = "md" }: ModalProp
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     if (open) {
       document.addEventListener("keydown", handleEscape);
     }
     return () => document.removeEventListener("keydown", handleEscape);
   }, [open, onClose]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 200);
+  };
 
   if (!open) return null;
 
@@ -41,18 +53,34 @@ export function Modal({ open, onClose, title, children, size = "md" }: ModalProp
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div 
+      className={`modal-overlay-enhanced ${isClosing ? 'closing' : ''}`} 
+      onClick={handleClose}
+    >
       <div 
-        className={`modal-content ${sizeClasses[size]}`}
+        className={`modal-content-enhanced ${sizeClasses[size]} ${isClosing ? 'closing' : ''}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-header">
-          <h3 className="modal-title">{title}</h3>
-          <button className="modal-close" onClick={onClose}>
-            <X size={20} />
+        {/* Decorative elements */}
+        <div className="modal-glow-orb modal-glow-orb-1" />
+        <div className="modal-glow-orb modal-glow-orb-2" />
+        
+        <div className="modal-header-enhanced">
+          <div className="modal-title-wrapper">
+            {icon ? (
+              <span className="modal-icon">{icon}</span>
+            ) : (
+              <span className="modal-icon">
+                <Sparkles size={20} />
+              </span>
+            )}
+            <h3 className="modal-title-enhanced">{title}</h3>
+          </div>
+          <button className="modal-close-enhanced" onClick={handleClose}>
+            <X size={18} />
           </button>
         </div>
-        <div className="modal-body">
+        <div className="modal-body-enhanced">
           {children}
         </div>
       </div>
