@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+import { ImageUpload } from "./ImageUpload";
 import { useProjects, Project } from "@/hooks/useProjects";
-import { Edit3, Trash2, Plus, FolderOpen, CheckCircle, X, ExternalLink, Github, Star, Image } from "lucide-react";
+import { Edit3, Trash2, Plus, FolderOpen, CheckCircle, X, ExternalLink, Github, Star } from "lucide-react";
 
 interface ProjectsManageDialogProps {
   open: boolean;
@@ -142,15 +143,15 @@ export function ProjectsManageDialog({ open, onClose }: ProjectsManageDialogProp
             <div className="form-grid-2">
               <div className="form-group">
                 <label className="form-label-enhanced">
-                  <span className="form-label-icon"><Image size={14} /></span>
-                  Image URL
+                  <span className="form-label-icon">🖼️</span>
+                  Project Image
                 </label>
-                <input 
-                  type="url" 
-                  className="form-input-enhanced" 
-                  value={formData.image_url} 
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://..."
+                <ImageUpload
+                  value={formData.image_url}
+                  onChange={(url) => setFormData({ ...formData, image_url: url })}
+                  bucket="images"
+                  folder="projects"
+                  placeholder="Upload Project Image"
                 />
               </div>
               <div className="form-group">

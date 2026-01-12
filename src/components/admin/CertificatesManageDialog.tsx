@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+import { ImageUpload } from "./ImageUpload";
 import { useCertificates } from "@/hooks/useCertificates";
-import { Edit3, Trash2, Plus, Award, CheckCircle, X, ExternalLink, Calendar, Image } from "lucide-react";
+import { Edit3, Trash2, Plus, Award, CheckCircle, X, ExternalLink, Calendar } from "lucide-react";
 
 interface Certificate {
   id: string;
@@ -174,15 +175,15 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
 
             <div className="form-group">
               <label className="form-label-enhanced">
-                <span className="form-label-icon"><Image size={14} /></span>
-                Certificate Image URL (optional)
+                <span className="form-label-icon">🖼️</span>
+                Certificate Image
               </label>
-              <input 
-                type="url" 
-                className="form-input-enhanced" 
-                value={formData.image_url} 
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://..."
+              <ImageUpload
+                value={formData.image_url}
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                bucket="images"
+                folder="certificates"
+                placeholder="Upload Certificate Image"
               />
             </div>
             
