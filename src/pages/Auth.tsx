@@ -12,7 +12,7 @@ export default function Auth() {
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { user, signIn, signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 

@@ -64,25 +64,7 @@ export function About() {
           </p>
         </div>
 
-        {/* About Image */}
-        {profileSettings?.about_image_url && (
-          <div className="flex justify-center" style={{ marginBottom: "3rem" }}>
-            <div className="relative">
-              <img 
-                src={profileSettings.about_image_url} 
-                alt="About me" 
-                style={{
-                  width: "16rem",
-                  height: "16rem",
-                  objectFit: "cover",
-                  borderRadius: "var(--radius-2xl)",
-                  boxShadow: "var(--shadow-lg)",
-                  border: "4px solid rgba(139, 92, 246, 0.2)"
-                }}
-              />
-            </div>
-          </div>
-        )}
+       
 
         <div className="about-grid">
           {/* Left Column */}
