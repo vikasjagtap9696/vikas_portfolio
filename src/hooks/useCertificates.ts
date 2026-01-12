@@ -34,6 +34,28 @@ export function useCertificates() {
 
   useEffect(() => {
     fetchCertificates();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('certificates-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'certificates' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setCertificates(prev => [...prev, payload.new as Certificate].sort((a, b) => a.display_order - b.display_order));
+          } else if (payload.eventType === 'UPDATE') {
+            setCertificates(prev => prev.map(c => c.id === payload.new.id ? payload.new as Certificate : c));
+          } else if (payload.eventType === 'DELETE') {
+            setCertificates(prev => prev.filter(c => c.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const addCertificate = async (certificate: Omit<Certificate, "id">) => {
@@ -45,7 +67,6 @@ export function useCertificates() {
         .single();
 
       if (error) throw error;
-      setCertificates([...certificates, data]);
       toast.success("Certificate added successfully!");
       return data;
     } catch (error: any) {
@@ -64,7 +85,6 @@ export function useCertificates() {
         .single();
 
       if (error) throw error;
-      setCertificates(certificates.map(c => c.id === id ? data : c));
       toast.success("Certificate updated successfully!");
       return data;
     } catch (error: any) {
@@ -81,7 +101,6 @@ export function useCertificates() {
         .eq("id", id);
 
       if (error) throw error;
-      setCertificates(certificates.filter(c => c.id !== id));
       toast.success("Certificate deleted successfully!");
     } catch (error: any) {
       toast.error(error.message || "Error deleting certificate");

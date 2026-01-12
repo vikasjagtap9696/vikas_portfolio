@@ -36,6 +36,28 @@ export function useProjects() {
 
   useEffect(() => {
     fetchProjects();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('projects-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'projects' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setProjects(prev => [...prev, payload.new as Project].sort((a, b) => a.display_order - b.display_order));
+          } else if (payload.eventType === 'UPDATE') {
+            setProjects(prev => prev.map(p => p.id === payload.new.id ? payload.new as Project : p));
+          } else if (payload.eventType === 'DELETE') {
+            setProjects(prev => prev.filter(p => p.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const addProject = async (project: Omit<Project, "id">) => {
@@ -47,7 +69,6 @@ export function useProjects() {
         .single();
 
       if (error) throw error;
-      setProjects([...projects, data]);
       toast.success("Project added successfully!");
       return data;
     } catch (error: any) {
@@ -66,7 +87,6 @@ export function useProjects() {
         .single();
 
       if (error) throw error;
-      setProjects(projects.map(p => p.id === id ? data : p));
       toast.success("Project updated successfully!");
       return data;
     } catch (error: any) {
@@ -83,7 +103,6 @@ export function useProjects() {
         .eq("id", id);
 
       if (error) throw error;
-      setProjects(projects.filter(p => p.id !== id));
       toast.success("Project deleted successfully!");
     } catch (error: any) {
       toast.error(error.message || "Error deleting project");
