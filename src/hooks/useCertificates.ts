@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { dataEvents, DATA_EVENTS } from "@/lib/dataEvents";
 
 export interface Certificate {
   id: string;
@@ -16,7 +17,7 @@ export function useCertificates() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchCertificates = async () => {
+  const fetchCertificates = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("certificates")
@@ -30,46 +31,31 @@ export function useCertificates() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCertificates();
 
-    // Subscribe to realtime changes
+    // Subscribe to custom data events (cross-component sync)
+    const unsubscribe = dataEvents.subscribe(DATA_EVENTS.CERTIFICATES_UPDATED, fetchCertificates);
+
+    // Subscribe to realtime changes from database
     const channel = supabase
       .channel('certificates-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'certificates' },
-        (payload) => {
-          console.log('Certificate INSERT:', payload);
-          setCertificates(prev => [...prev, payload.new as Certificate].sort((a, b) => a.display_order - b.display_order));
+        { event: '*', schema: 'public', table: 'certificates' },
+        () => {
+          fetchCertificates();
         }
       )
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'certificates' },
-        (payload) => {
-          console.log('Certificate UPDATE:', payload);
-          setCertificates(prev => prev.map(c => c.id === payload.new.id ? payload.new as Certificate : c));
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'certificates' },
-        (payload) => {
-          console.log('Certificate DELETE:', payload);
-          setCertificates(prev => prev.filter(c => c.id !== payload.old.id));
-        }
-      )
-      .subscribe((status) => {
-        console.log('Certificates subscription status:', status);
-      });
+      .subscribe();
 
     return () => {
+      unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchCertificates]);
 
   const addCertificate = async (certificate: Omit<Certificate, "id">) => {
     try {
@@ -81,6 +67,7 @@ export function useCertificates() {
 
       if (error) throw error;
       toast.success("Certificate added successfully!");
+      dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
       return data;
     } catch (error: any) {
       toast.error(error.message || "Error adding certificate");
@@ -99,6 +86,7 @@ export function useCertificates() {
 
       if (error) throw error;
       toast.success("Certificate updated successfully!");
+      dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
       return data;
     } catch (error: any) {
       toast.error(error.message || "Error updating certificate");
@@ -115,6 +103,7 @@ export function useCertificates() {
 
       if (error) throw error;
       toast.success("Certificate deleted successfully!");
+      dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
     } catch (error: any) {
       toast.error(error.message || "Error deleting certificate");
       throw error;
