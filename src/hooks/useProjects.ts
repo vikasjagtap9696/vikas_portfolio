@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { dataEvents, DATA_EVENTS } from "@/lib/dataEvents";
 
 export interface Project {
   id: string;
@@ -18,7 +19,7 @@ export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("projects")
@@ -32,46 +33,31 @@ export function useProjects() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProjects();
 
-    // Subscribe to realtime changes
+    // Subscribe to custom data events (cross-component sync)
+    const unsubscribe = dataEvents.subscribe(DATA_EVENTS.PROJECTS_UPDATED, fetchProjects);
+
+    // Subscribe to realtime changes from database
     const channel = supabase
       .channel('projects-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'projects' },
-        (payload) => {
-          console.log('Project INSERT:', payload);
-          setProjects(prev => [...prev, payload.new as Project].sort((a, b) => a.display_order - b.display_order));
+        { event: '*', schema: 'public', table: 'projects' },
+        () => {
+          fetchProjects();
         }
       )
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'projects' },
-        (payload) => {
-          console.log('Project UPDATE:', payload);
-          setProjects(prev => prev.map(p => p.id === payload.new.id ? payload.new as Project : p));
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'projects' },
-        (payload) => {
-          console.log('Project DELETE:', payload);
-          setProjects(prev => prev.filter(p => p.id !== payload.old.id));
-        }
-      )
-      .subscribe((status) => {
-        console.log('Projects subscription status:', status);
-      });
+      .subscribe();
 
     return () => {
+      unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchProjects]);
 
   const addProject = async (project: Omit<Project, "id">) => {
     try {
@@ -83,6 +69,7 @@ export function useProjects() {
 
       if (error) throw error;
       toast.success("Project added successfully!");
+      dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
       return data;
     } catch (error: any) {
       toast.error(error.message || "Error adding project");
@@ -101,6 +88,7 @@ export function useProjects() {
 
       if (error) throw error;
       toast.success("Project updated successfully!");
+      dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
       return data;
     } catch (error: any) {
       toast.error(error.message || "Error updating project");
@@ -117,6 +105,7 @@ export function useProjects() {
 
       if (error) throw error;
       toast.success("Project deleted successfully!");
+      dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
     } catch (error: any) {
       toast.error(error.message || "Error deleting project");
       throw error;
