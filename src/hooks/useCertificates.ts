@@ -37,21 +37,34 @@ export function useCertificates() {
 
     // Subscribe to realtime changes
     const channel = supabase
-      .channel('certificates-changes')
+      .channel('certificates-realtime')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'certificates' },
+        { event: 'INSERT', schema: 'public', table: 'certificates' },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setCertificates(prev => [...prev, payload.new as Certificate].sort((a, b) => a.display_order - b.display_order));
-          } else if (payload.eventType === 'UPDATE') {
-            setCertificates(prev => prev.map(c => c.id === payload.new.id ? payload.new as Certificate : c));
-          } else if (payload.eventType === 'DELETE') {
-            setCertificates(prev => prev.filter(c => c.id !== payload.old.id));
-          }
+          console.log('Certificate INSERT:', payload);
+          setCertificates(prev => [...prev, payload.new as Certificate].sort((a, b) => a.display_order - b.display_order));
         }
       )
-      .subscribe();
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'certificates' },
+        (payload) => {
+          console.log('Certificate UPDATE:', payload);
+          setCertificates(prev => prev.map(c => c.id === payload.new.id ? payload.new as Certificate : c));
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'certificates' },
+        (payload) => {
+          console.log('Certificate DELETE:', payload);
+          setCertificates(prev => prev.filter(c => c.id !== payload.old.id));
+        }
+      )
+      .subscribe((status) => {
+        console.log('Certificates subscription status:', status);
+      });
 
     return () => {
       supabase.removeChannel(channel);

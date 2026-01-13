@@ -39,21 +39,34 @@ export function useProjects() {
 
     // Subscribe to realtime changes
     const channel = supabase
-      .channel('projects-changes')
+      .channel('projects-realtime')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'projects' },
+        { event: 'INSERT', schema: 'public', table: 'projects' },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setProjects(prev => [...prev, payload.new as Project].sort((a, b) => a.display_order - b.display_order));
-          } else if (payload.eventType === 'UPDATE') {
-            setProjects(prev => prev.map(p => p.id === payload.new.id ? payload.new as Project : p));
-          } else if (payload.eventType === 'DELETE') {
-            setProjects(prev => prev.filter(p => p.id !== payload.old.id));
-          }
+          console.log('Project INSERT:', payload);
+          setProjects(prev => [...prev, payload.new as Project].sort((a, b) => a.display_order - b.display_order));
         }
       )
-      .subscribe();
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'projects' },
+        (payload) => {
+          console.log('Project UPDATE:', payload);
+          setProjects(prev => prev.map(p => p.id === payload.new.id ? payload.new as Project : p));
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'projects' },
+        (payload) => {
+          console.log('Project DELETE:', payload);
+          setProjects(prev => prev.filter(p => p.id !== payload.old.id));
+        }
+      )
+      .subscribe((status) => {
+        console.log('Projects subscription status:', status);
+      });
 
     return () => {
       supabase.removeChannel(channel);
