@@ -4,11 +4,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AboutTextDialog } from "@/components/admin/AboutTextDialog";
 import { CareerGoalsDialog } from "@/components/admin/CareerGoalsDialog";
 import { AboutImageDialog } from "@/components/admin/AboutImageDialog";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export function About() {
   const { data: profileSettings } = useProfileSettings();
   const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState<string | null>(null);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
 
   const careerGoals = profileSettings?.career_goals || [
     "Become an industry-ready all-round developer",
@@ -26,7 +28,7 @@ export function About() {
   const secondaryEdu = parseEducation(profileSettings?.about_education_secondary || "Full Stack Development | Self-taught & Continuous Learning");
 
   return (
-    <section id="about" className="section" style={{ position: "relative" }}>
+    <section ref={sectionRef} id="about" className={`section section-animate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
       {user && (
         <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 50, display: "flex", gap: "0.5rem" }}>

@@ -3,11 +3,13 @@ import { useCertificates } from "@/hooks/useCertificates";
 import { useAuth } from "@/contexts/AuthContext";
 import { CertificatesManageDialog } from "@/components/admin/CertificatesManageDialog";
 import { format } from "date-fns";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export function Certificates() {
   const { certificates, loading } = useCertificates();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "";
@@ -75,7 +77,7 @@ export function Certificates() {
   );
 
   return (
-    <section id="certificates" className="section relative">
+    <section ref={sectionRef} id="certificates" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && certificates.length > 0 && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>

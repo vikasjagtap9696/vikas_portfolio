@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useExperiences, type Experience as ExperienceType } from "@/hooks/useExperiences";
 import { useAuth } from "@/contexts/AuthContext";
 import { ExperienceManageDialog } from "@/components/admin/ExperienceManageDialog";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const fallbackExperiences: ExperienceType[] = [
   {
@@ -51,10 +52,11 @@ export function Experience() {
   const { experiences: dbExperiences } = useExperiences();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
   const experiences = dbExperiences.length > 0 ? dbExperiences : fallbackExperiences;
 
   return (
-    <section id="experience" className="section relative">
+    <section ref={sectionRef} id="experience" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>

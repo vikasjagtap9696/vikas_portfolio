@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSkills, Skill } from "@/hooks/useSkills";
 import { useAuth } from "@/contexts/AuthContext";
 import { SkillsManageDialog } from "@/components/admin/SkillsManageDialog";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const categoryConfig: Record<string, { color: "primary" | "accent" }> = {
   "Frontend": { color: "primary" },
@@ -61,6 +62,7 @@ export function Skills() {
   const { skills: dbSkills } = useSkills();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
   const skills = dbSkills.length > 0 ? dbSkills : fallbackSkills;
 
   // Group skills by category
@@ -73,7 +75,7 @@ export function Skills() {
   }, {} as Record<string, Skill[]>);
 
   return (
-    <section id="skills" className="section relative">
+    <section ref={sectionRef} id="skills" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>

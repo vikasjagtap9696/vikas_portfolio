@@ -3,12 +3,14 @@ import { useProjects } from "@/hooks/useProjects";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProjectsManageDialog } from "@/components/admin/ProjectsManageDialog";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export function Projects() {
   const { projects, loading } = useProjects();
   const { user } = useAuth();
   const { data: profileSettings } = useProfileSettings();
   const [showDialog, setShowDialog] = useState(false);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
   const featuredProjects = projects.filter((p) => p.featured);
 
@@ -73,7 +75,7 @@ export function Projects() {
   );
 
   return (
-    <section id="projects" className="section" style={{ position: "relative" }}>
+    <section ref={sectionRef} id="projects" className={`section section-animate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
       {user && projects.length > 0 && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
