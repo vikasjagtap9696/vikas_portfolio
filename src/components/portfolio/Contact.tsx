@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const contactInfo = [
   {
@@ -51,6 +52,7 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState>({ show: false, title: "", description: "", variant: "default" });
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
   const showToast = (title: string, description: string, variant: "default" | "destructive" = "default") => {
     setToast({ show: true, title, description, variant });
@@ -102,7 +104,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="section relative">
+    <section ref={sectionRef} id="contact" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
       {/* Background decoration */}
       <div 
         className="bg-blob bg-blob-primary" 

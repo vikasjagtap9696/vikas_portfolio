@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useResume } from "@/hooks/useResume";
 import { useAuth } from "@/contexts/AuthContext";
 import { ResumeUploadDialog } from "@/components/admin/ResumeUploadDialog";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export function Resume() {
   const { resumeSettings, isLoading } = useResume();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
 
   const handleDownload = () => {
     if (resumeSettings?.file_url) {
@@ -15,7 +17,7 @@ export function Resume() {
   };
 
   return (
-    <section id="resume" className="section resume-section" style={{ position: "relative" }}>
+    <section ref={sectionRef} id="resume" className={`section resume-section section-animate-scale ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
       {user && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
