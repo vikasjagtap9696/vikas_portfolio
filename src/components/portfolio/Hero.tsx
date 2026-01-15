@@ -5,11 +5,13 @@ import { HeroTextDialog } from "@/components/admin/HeroTextDialog";
 import { HeroStatsDialog } from "@/components/admin/HeroStatsDialog";
 import { ProfilePhotoDialog } from "@/components/admin/ProfilePhotoDialog";
 import { SocialLinksDialog } from "@/components/admin/SocialLinksDialog";
+import { useTypingAnimation } from "@/hooks/useTypingAnimation";
 
 export function Hero() {
   const { data: profileSettings } = useProfileSettings();
   const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState<string | null>(null);
+  const [showSubtitle, setShowSubtitle] = useState(false);
 
   const handleScroll = (href: string) => {
     const element = document.querySelector(href);
@@ -20,6 +22,28 @@ export function Hero() {
   const nameParts = name.split(" ");
   const lastName = nameParts.pop() || "";
   const firstName = nameParts.join(" ");
+
+  const greeting = profileSettings?.hero_title || "Hello, I'm";
+  const subtitle = profileSettings?.hero_subtitle || "Full Stack Web Developer";
+
+  const { displayedText: typedGreeting, isComplete: greetingComplete } = useTypingAnimation({
+    text: greeting,
+    speed: 80,
+    delay: 200,
+  });
+
+  const { displayedText: typedName, isComplete: nameComplete } = useTypingAnimation({
+    text: `${firstName} ${lastName}`,
+    speed: 100,
+    delay: greetingComplete ? 0 : greeting.length * 80 + 400,
+    onComplete: () => setShowSubtitle(true),
+  });
+
+  const { displayedText: typedSubtitle } = useTypingAnimation({
+    text: subtitle,
+    speed: 60,
+    delay: showSubtitle ? 200 : 10000,
+  });
 
   return (
     <section id="home" className="hero">
@@ -83,19 +107,22 @@ export function Hero() {
         <div className="hero-content">
           {/* Left Content */}
           <div className="hero-text">
-            <p className="hero-greeting animate-fade-in">
-              {profileSettings?.hero_title || "Hello, I'm"}
+            <p className="hero-greeting">
+              {typedGreeting}
+              {!greetingComplete && <span className="typing-cursor">|</span>}
             </p>
             <h1 className="hero-name">
-              <span className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-                {firstName}
+              <span>
+                {typedName.split(" ").slice(0, -1).join(" ")}
               </span>{" "}
-              <span className="gradient-text animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                {lastName}
+              <span className="gradient-text">
+                {typedName.split(" ").slice(-1)[0]}
               </span>
+              {!nameComplete && typedName.length > 0 && <span className="typing-cursor">|</span>}
             </h1>
-            <h2 className="hero-subtitle animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              {profileSettings?.hero_subtitle || "Full Stack Web Developer"}
+            <h2 className="hero-subtitle">
+              {typedSubtitle}
+              {showSubtitle && typedSubtitle.length < subtitle.length && <span className="typing-cursor">|</span>}
             </h2>
             <p className="hero-bio animate-fade-in" style={{ animationDelay: "0.4s" }}>
               {profileSettings?.hero_bio || "Passionate developer building scalable web applications with React, Node.js, Java, SQL, and PostgreSQL. Focused on cybersecurity and continuously improving through real-world projects."}
