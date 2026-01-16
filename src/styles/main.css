@@ -4970,3 +4970,43 @@ html, body {
     }
   }
 }
+
+/* ============================================
+   STAT CARD REVEAL ANIMATION
+============================================ */
+.stat-reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.9);
+  animation: statReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes statReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Counter animation for stat values */
+.stat-reveal .stat-value {
+  animation: countPulse 0.8s ease-out forwards;
+  animation-delay: inherit;
+}
+
+@keyframes countPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { useAuth } from "@/contexts/AuthContext";
 import { HeroTextDialog } from "@/components/admin/HeroTextDialog";
@@ -222,19 +223,19 @@ export function Hero() {
 
             {/* Stats Grid */}
             <div className="stats-grid">
-              <div className="stat-card glass hover-glow">
+              <div className="stat-card glass hover-glow stat-reveal" style={{ animationDelay: "0.1s" }}>
                 <div className="stat-value gradient-text">{profileSettings?.stat_years_experience || "3+"}</div>
                 <div className="stat-label">Years Experience</div>
               </div>
-              <div className="stat-card glass hover-glow">
+              <div className="stat-card glass hover-glow stat-reveal" style={{ animationDelay: "0.2s" }}>
                 <div className="stat-value gradient-text">{profileSettings?.stat_projects_completed || "25+"}</div>
                 <div className="stat-label">Projects Completed</div>
               </div>
-              <div className="stat-card glass hover-glow">
+              <div className="stat-card glass hover-glow stat-reveal" style={{ animationDelay: "0.3s" }}>
                 <div className="stat-value gradient-text">{profileSettings?.stat_technologies || "15+"}</div>
                 <div className="stat-label">Technologies</div>
               </div>
-              <div className="stat-card glass hover-glow">
+              <div className="stat-card glass hover-glow stat-reveal" style={{ animationDelay: "0.4s" }}>
                 <div className="stat-value gradient-text">{profileSettings?.stat_client_satisfaction || "100%"}</div>
                 <div className="stat-label">Client Satisfaction</div>
               </div>
