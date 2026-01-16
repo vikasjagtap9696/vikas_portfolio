@@ -6,6 +6,7 @@ import { HeroStatsDialog } from "@/components/admin/HeroStatsDialog";
 import { ProfilePhotoDialog } from "@/components/admin/ProfilePhotoDialog";
 import { SocialLinksDialog } from "@/components/admin/SocialLinksDialog";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
+import { ParticleBackground } from "./ParticleBackground";
 
 export function Hero() {
   const { data: profileSettings } = useProfileSettings();
@@ -91,8 +92,11 @@ export function Hero() {
         </div>
       )}
 
+      {/* Particle Animation */}
+      <ParticleBackground />
+
       {/* Background Effects */}
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
         <div 
           className="bg-blob bg-blob-primary animate-float" 
           style={{ top: "25%", left: "-8rem", width: "24rem", height: "24rem" }}
