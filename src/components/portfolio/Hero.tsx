@@ -7,6 +7,7 @@ import { ProfilePhotoDialog } from "@/components/admin/ProfilePhotoDialog";
 import { SocialLinksDialog } from "@/components/admin/SocialLinksDialog";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
 import { ParticleBackground } from "./ParticleBackground";
+import { WaveTransition } from "./WaveTransition";
 
 export function Hero() {
   const { data: profileSettings } = useProfileSettings();
@@ -255,6 +256,9 @@ export function Hero() {
           </button>
         </div>
       </div>
+
+      {/* Wave Transition */}
+      <WaveTransition />
 
       {/* Dialogs */}
       <HeroTextDialog open={openDialog === "heroText"} onClose={() => setOpenDialog(null)} />
