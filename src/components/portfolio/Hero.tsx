@@ -6,6 +6,7 @@ import { HeroStatsDialog } from "@/components/admin/HeroStatsDialog";
 import { ProfilePhotoDialog } from "@/components/admin/ProfilePhotoDialog";
 import { SocialLinksDialog } from "@/components/admin/SocialLinksDialog";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
+import { useParallax } from "@/hooks/useParallax";
 import { ParticleBackground } from "./ParticleBackground";
 import { WaveTransition } from "./WaveTransition";
 import { StatCounter } from "./StatCounter";
@@ -15,6 +16,10 @@ export function Hero() {
   const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState<string | null>(null);
   const [showSubtitle, setShowSubtitle] = useState(false);
+
+  // Parallax effects for background blobs
+  const parallaxSlow = useParallax({ speed: 0.15, reverse: false });
+  const parallaxFast = useParallax({ speed: 0.25, reverse: true });
 
   const handleScroll = (href: string) => {
     const element = document.querySelector(href);
@@ -97,15 +102,41 @@ export function Hero() {
       {/* Particle Animation */}
       <ParticleBackground />
 
-      {/* Background Effects */}
+      {/* Background Effects with Parallax */}
       <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
         <div 
-          className="bg-blob bg-blob-primary animate-float" 
-          style={{ top: "25%", left: "-8rem", width: "24rem", height: "24rem" }}
+          className="bg-blob bg-blob-primary animate-float parallax-blob" 
+          style={{ 
+            top: "25%", 
+            left: "-8rem", 
+            width: "24rem", 
+            height: "24rem",
+            transform: `translate3d(${parallaxSlow.x}px, ${parallaxSlow.y}px, 0) rotate(${parallaxSlow.y * 0.02}deg)`,
+          }}
         />
         <div 
-          className="bg-blob bg-blob-accent animate-float" 
-          style={{ bottom: "25%", right: "-8rem", width: "24rem", height: "24rem", animationDelay: "3s" }}
+          className="bg-blob bg-blob-accent animate-float parallax-blob" 
+          style={{ 
+            bottom: "25%", 
+            right: "-8rem", 
+            width: "24rem", 
+            height: "24rem", 
+            animationDelay: "3s",
+            transform: `translate3d(${parallaxFast.x}px, ${parallaxFast.y}px, 0) rotate(${parallaxFast.y * -0.03}deg)`,
+          }}
+        />
+        {/* Additional parallax blob for more depth */}
+        <div 
+          className="bg-blob bg-blob-secondary animate-float parallax-blob" 
+          style={{ 
+            top: "60%", 
+            left: "50%", 
+            width: "18rem", 
+            height: "18rem", 
+            animationDelay: "5s",
+            transform: `translate3d(${-parallaxSlow.x * 0.5}px, ${parallaxSlow.y * 0.7}px, 0)`,
+            opacity: 0.4,
+          }}
         />
       </div>
 
