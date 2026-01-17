@@ -10,6 +10,7 @@ import { useParallax } from "@/hooks/useParallax";
 import { ParticleBackground } from "./ParticleBackground";
 import { WaveTransition } from "./WaveTransition";
 import { StatCounter } from "./StatCounter";
+import { MagneticButton } from "./MagneticButton";
 
 export function Hero() {
   const { data: profileSettings } = useProfileSettings();
@@ -167,20 +168,20 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div className="hero-cta animate-fade-in" style={{ animationDelay: "0.5s" }}>
-              <button
+              <MagneticButton
                 className="btn btn-primary btn-lg"
                 onClick={() => handleScroll("#projects")}
                 style={{ boxShadow: "var(--shadow-glow-primary)" }}
               >
                 View Projects
-              </button>
-              <button
+              </MagneticButton>
+              <MagneticButton
                 className="btn btn-outline btn-lg"
                 onClick={() => handleScroll("#contact")}
               >
                 Hire Me
-              </button>
-              <button
+              </MagneticButton>
+              <MagneticButton
                 className="btn btn-ghost btn-lg"
                 onClick={() => handleScroll("#resume")}
               >
@@ -190,7 +191,7 @@ export function Hero() {
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
                 Resume
-              </button>
+              </MagneticButton>
             </div>
 
             {/* Social Links */}
