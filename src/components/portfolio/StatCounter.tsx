@@ -1,29 +1,64 @@
+import { useRef, useCallback, useEffect } from "react";
 import { useCounterAnimation, parseStatValue } from "@/hooks/useCounterAnimation";
 
 interface StatCounterProps {
   value: string;
   label: string;
+  detail?: string;
   delay?: number;
 }
 
-export function StatCounter({ value, label, delay = 0 }: StatCounterProps) {
+export function StatCounter({ value, label, detail, delay = 0 }: StatCounterProps) {
   const { value: numValue, suffix, prefix } = parseStatValue(value);
-  const { ref, displayValue } = useCounterAnimation({
+  const { ref: counterRef, displayValue } = useCounterAnimation({
     end: numValue,
     duration: 2000,
     delay,
     suffix,
     prefix,
   });
+  
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Sync refs
+  useEffect(() => {
+    if (cardRef.current && counterRef.current !== cardRef.current) {
+      (counterRef as React.MutableRefObject<HTMLDivElement | null>).current = cardRef.current;
+    }
+  }, [counterRef]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = (y - centerY) / 10;
+    const rotateY = (centerX - x) / 10;
+    
+    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+  }, []);
 
   return (
     <div 
-      ref={ref} 
-      className="stat-card glass hover-glow stat-reveal" 
+      ref={cardRef}
+      className="stat-card stat-card-3d glass hover-glow stat-reveal" 
       style={{ animationDelay: `${delay / 1000}s` }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
+      <div className="stat-shine" />
       <div className="stat-value gradient-text">{displayValue}</div>
       <div className="stat-label">{label}</div>
+      {detail && <div className="stat-detail">{detail}</div>}
     </div>
   );
 }
