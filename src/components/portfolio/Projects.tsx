@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ProjectsManageDialog } from "@/components/admin/ProjectsManageDialog";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 export function Projects() {
   const { projects, loading } = useProjects();
@@ -89,9 +90,12 @@ export function Projects() {
 
       <div className="container">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            Featured <span className="gradient-text">Projects</span>
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Projects"
+          >
+            Featured Projects
+          </ScrambleTitle>
           <p className="section-subtitle">
             A showcase of my recent work and personal projects
           </p>

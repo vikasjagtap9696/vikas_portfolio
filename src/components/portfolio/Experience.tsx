@@ -3,6 +3,7 @@ import { useExperiences, type Experience as ExperienceType } from "@/hooks/useEx
 import { useAuth } from "@/contexts/AuthContext";
 import { ExperienceManageDialog } from "@/components/admin/ExperienceManageDialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 const fallbackExperiences: ExperienceType[] = [
   {
@@ -76,9 +77,12 @@ export function Experience() {
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            Work <span className="gradient-text">Experience</span>
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Experience"
+          >
+            Work Experience
+          </ScrambleTitle>
           <p className="section-subtitle">
             My professional journey and educational background
           </p>

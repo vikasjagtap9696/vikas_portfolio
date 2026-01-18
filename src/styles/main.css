@@ -749,7 +749,52 @@ h4 { font-size: 1.25rem; }
   transform: translateY(-4px);
 }
 
-/* Social Links */
+/* ============================================
+   SCRAMBLE TITLE EFFECT
+============================================ */
+.scramble-title {
+  font-family: var(--font-sans);
+  position: relative;
+  display: inline-block;
+}
+
+.scramble-title .scramble-text {
+  display: inline;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+
+.scramble-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+}
+
+.scramble-title.revealed::after {
+  width: 60px;
+}
+
+/* Glitch effect on scramble characters */
+@keyframes scrambleGlow {
+  0%, 100% {
+    text-shadow: none;
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+  }
+}
+
+.scramble-title:not(.revealed) .scramble-text {
+  animation: scrambleGlow 0.1s ease-in-out infinite;
+}
+
+
 .social-link {
   display: flex;
   align-items: center;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 const contactInfo = [
   {
@@ -120,9 +121,12 @@ export function Contact() {
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            Get In <span className="gradient-text">Touch</span>
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Touch"
+          >
+            Get In Touch
+          </ScrambleTitle>
           <p className="section-subtitle">
             Have a project in mind or want to collaborate? Let's talk!
           </p>
