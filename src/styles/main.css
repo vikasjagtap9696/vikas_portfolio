@@ -531,72 +531,222 @@ h4 { font-size: 1.25rem; }
   }
 }
 
-/* Scroll-triggered Section Animations */
+/* ============================================
+   SCROLL-TRIGGERED SECTION REVEAL ANIMATIONS
+============================================ */
+
+/* Base section animation - fade up with blur */
 .section-animate {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(60px);
+  filter: blur(8px);
+  transition: 
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .section-animate.visible {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 
+/* Section title animation */
+.section-animate .section-title {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: 
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+
+.section-animate.visible .section-title {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Section subtitle animation */
+.section-animate .section-subtitle {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+}
+
+.section-animate.visible .section-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Left slide animation */
 .section-animate-left {
   opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-80px);
+  filter: blur(6px);
+  transition: 
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .section-animate-left.visible {
   opacity: 1;
   transform: translateX(0);
+  filter: blur(0);
 }
 
+/* Right slide animation */
 .section-animate-right {
   opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(80px);
+  filter: blur(6px);
+  transition: 
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .section-animate-right.visible {
   opacity: 1;
   transform: translateX(0);
+  filter: blur(0);
 }
 
+/* Scale animation */
 .section-animate-scale {
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(0.85);
+  filter: blur(10px);
+  transition: 
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .section-animate-scale.visible {
   opacity: 1;
   transform: scale(1);
+  filter: blur(0);
 }
 
-/* Staggered children animation */
+/* Rotate-in animation */
+.section-animate-rotate {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(15deg) translateY(40px);
+  transition: 
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-animate-rotate.visible {
+  opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translateY(0);
+}
+
+/* ============================================
+   STAGGERED CHILDREN ANIMATIONS
+============================================ */
+
+/* Base stagger - for grids and lists */
 .stagger-children > * {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translateY(40px);
+  filter: blur(4px);
+  transition: 
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; }
-.stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; }
-.stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; }
-.stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; }
-.stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; }
-.stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.15s; }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.25s; }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 0.3s; }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 0.35s; }
+.stagger-children.visible > *:nth-child(7) { transition-delay: 0.4s; }
+.stagger-children.visible > *:nth-child(8) { transition-delay: 0.45s; }
+.stagger-children.visible > *:nth-child(9) { transition-delay: 0.5s; }
+.stagger-children.visible > *:nth-child(10) { transition-delay: 0.55s; }
+.stagger-children.visible > *:nth-child(11) { transition-delay: 0.6s; }
+.stagger-children.visible > *:nth-child(12) { transition-delay: 0.65s; }
 
 .stagger-children.visible > * {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Stagger scale variant */
+.stagger-scale > * {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: 
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stagger-scale.visible > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger-scale.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.stagger-scale.visible > *:nth-child(3) { transition-delay: 0.15s; }
+.stagger-scale.visible > *:nth-child(4) { transition-delay: 0.2s; }
+.stagger-scale.visible > *:nth-child(5) { transition-delay: 0.25s; }
+.stagger-scale.visible > *:nth-child(6) { transition-delay: 0.3s; }
+
+.stagger-scale.visible > * {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============================================
+   REVEAL ITEM ANIMATIONS (for individual cards)
+============================================ */
+
+/* Reveal from bottom */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: 
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-animate.visible .reveal-item,
+.reveal-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reveal with glow effect */
+.reveal-glow {
+  opacity: 0;
+  transform: translateY(30px);
+  box-shadow: 0 0 0 rgba(139, 92, 246, 0);
+  transition: 
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+
+.section-animate.visible .reveal-glow {
+  opacity: 1;
+  transform: translateY(0);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+/* Card hover lift effect on visible items */
+.section-animate.visible .glass,
+.section-animate.visible .card {
+  transition: 
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+
+.section-animate.visible .glass:hover,
+.section-animate.visible .card:hover {
+  transform: translateY(-4px);
 }
 
 /* Social Links */

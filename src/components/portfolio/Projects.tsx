@@ -123,7 +123,7 @@ export function Projects() {
             )}
           </div>
         ) : (
-          <div className="projects-grid">
+          <div className={`projects-grid stagger-children ${isVisible ? 'visible' : ''}`}>
             {featuredProjects.map((project, index) => (
               <div
                 key={project.id}

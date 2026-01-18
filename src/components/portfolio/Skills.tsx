@@ -107,7 +107,7 @@ export function Skills() {
           </p>
         </div>
 
-        <div className="skills-grid">
+        <div className={`skills-grid stagger-children ${isVisible ? 'visible' : ''}`}>
           {Object.entries(skillsByCategory).map(([category, categorySkills], index) => {
             const config = categoryConfig[category] || { color: "primary" };
             
