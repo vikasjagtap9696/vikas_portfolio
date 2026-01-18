@@ -3,6 +3,7 @@ import { useSkills, Skill } from "@/hooks/useSkills";
 import { useAuth } from "@/contexts/AuthContext";
 import { SkillsManageDialog } from "@/components/admin/SkillsManageDialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 const categoryConfig: Record<string, { color: "primary" | "accent" }> = {
   "Frontend": { color: "primary" },
@@ -99,9 +100,12 @@ export function Skills() {
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            My <span className="gradient-text">Skills</span>
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Skills"
+          >
+            My Skills
+          </ScrambleTitle>
           <p className="section-subtitle">
             Technologies and tools I use to bring ideas to life
           </p>

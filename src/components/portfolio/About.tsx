@@ -5,6 +5,7 @@ import { AboutTextDialog } from "@/components/admin/AboutTextDialog";
 import { CareerGoalsDialog } from "@/components/admin/CareerGoalsDialog";
 import { AboutImageDialog } from "@/components/admin/AboutImageDialog";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 export function About() {
   const { data: profileSettings } = useProfileSettings();
@@ -58,9 +59,12 @@ export function About() {
 
       <div className="container">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            About <span className="gradient-text">Me</span>
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Me"
+          >
+            About Me
+          </ScrambleTitle>
           <p className="section-subtitle">
             {profileSettings?.about_intro || "A passionate developer committed to creating impactful digital solutions"}
           </p>

@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { CertificatesManageDialog } from "@/components/admin/CertificatesManageDialog";
 import { format } from "date-fns";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ScrambleTitle } from "./ScrambleTitle";
 
 export function Certificates() {
   const { certificates, loading } = useCertificates();
@@ -97,9 +98,12 @@ export function Certificates() {
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <h2 className="section-title">
-            <span className="gradient-text">Certificates</span> & Credentials
-          </h2>
+          <ScrambleTitle 
+            className="section-title" 
+            highlightText="Certificates"
+          >
+            Certificates & Credentials
+          </ScrambleTitle>
           <p className="section-subtitle">
             Professional certifications validating my skills and expertise
           </p>
