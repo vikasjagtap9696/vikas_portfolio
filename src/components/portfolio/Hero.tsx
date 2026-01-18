@@ -258,21 +258,25 @@ export function Hero() {
               <StatCounter 
                 value={profileSettings?.stat_years_experience || "3+"} 
                 label="Years Experience" 
+                detail="Professional development journey"
                 delay={100} 
               />
               <StatCounter 
                 value={profileSettings?.stat_projects_completed || "25+"} 
                 label="Projects Completed" 
+                detail="Web apps, APIs & more"
                 delay={200} 
               />
               <StatCounter 
                 value={profileSettings?.stat_technologies || "15+"} 
                 label="Technologies" 
+                detail="React, Node, TypeScript & more"
                 delay={300} 
               />
               <StatCounter 
                 value={profileSettings?.stat_client_satisfaction || "100%"} 
                 label="Client Satisfaction" 
+                detail="Committed to excellence"
                 delay={400} 
               />
             </div>
