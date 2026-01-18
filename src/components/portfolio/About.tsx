@@ -68,7 +68,7 @@ export function About() {
 
        
 
-        <div className="about-grid">
+        <div className={`about-grid stagger-children ${isVisible ? 'visible' : ''}`}>
           {/* Left Column */}
           <div className="flex flex-col gap-6">
             {/* Who I Am */}

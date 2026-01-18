@@ -114,7 +114,7 @@ export function Certificates() {
         ) : certificates.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="certificates-grid">
+          <div className={`certificates-grid stagger-children ${isVisible ? 'visible' : ''}`}>
             {certificates.map((cert, index) => (
               <div
                 key={cert.id}

@@ -84,7 +84,7 @@ export function Experience() {
           </p>
         </div>
 
-        <div className="timeline">
+        <div className={`timeline stagger-children ${isVisible ? 'visible' : ''}`}>
           <div className="timeline-line" />
 
           {experiences.map((exp, index) => (

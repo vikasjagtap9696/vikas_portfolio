@@ -128,7 +128,7 @@ export function Contact() {
           </p>
         </div>
 
-        <div className="contact-grid">
+        <div className={`contact-grid stagger-children ${isVisible ? 'visible' : ''}`}>
           {/* Contact Info */}
           <div className="contact-info-section">
             <div>
