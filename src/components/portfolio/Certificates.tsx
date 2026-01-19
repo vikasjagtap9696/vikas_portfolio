@@ -78,7 +78,7 @@ export function Certificates() {
   );
 
   return (
-    <section ref={sectionRef} id="certificates" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
+    <section ref={sectionRef} id="certificates" className={`section relative section-animate-zoom ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && certificates.length > 0 && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
@@ -118,7 +118,7 @@ export function Certificates() {
         ) : certificates.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className={`certificates-grid stagger-children ${isVisible ? 'visible' : ''}`}>
+          <div className={`certificates-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
             {certificates.map((cert, index) => (
               <div
                 key={cert.id}

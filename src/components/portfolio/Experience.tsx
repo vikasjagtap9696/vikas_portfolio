@@ -57,7 +57,7 @@ export function Experience() {
   const experiences = dbExperiences.length > 0 ? dbExperiences : fallbackExperiences;
 
   return (
-    <section ref={sectionRef} id="experience" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
+    <section ref={sectionRef} id="experience" className={`section relative section-animate-left ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
@@ -88,7 +88,7 @@ export function Experience() {
           </p>
         </div>
 
-        <div className={`timeline stagger-children ${isVisible ? 'visible' : ''}`}>
+        <div className={`timeline stagger-alternate ${isVisible ? 'visible' : ''}`}>
           <div className="timeline-line" />
 
           {experiences.map((exp, index) => (
