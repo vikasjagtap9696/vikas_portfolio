@@ -76,7 +76,7 @@ export function Projects() {
   );
 
   return (
-    <section ref={sectionRef} id="projects" className={`section section-animate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
+    <section ref={sectionRef} id="projects" className={`section section-animate-curtain ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
       {user && projects.length > 0 && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
@@ -127,7 +127,7 @@ export function Projects() {
             )}
           </div>
         ) : (
-          <div className={`projects-grid stagger-children ${isVisible ? 'visible' : ''}`}>
+          <div className={`projects-grid stagger-wave ${isVisible ? 'visible' : ''}`}>
             {featuredProjects.map((project, index) => (
               <div
                 key={project.id}

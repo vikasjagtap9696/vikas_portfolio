@@ -29,7 +29,7 @@ export function About() {
   const secondaryEdu = parseEducation(profileSettings?.about_education_secondary || "Full Stack Development | Self-taught & Continuous Learning");
 
   return (
-    <section ref={sectionRef} id="about" className={`section section-animate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
+    <section ref={sectionRef} id="about" className={`section section-animate-rotate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
       {user && (
         <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 50, display: "flex", gap: "0.5rem" }}>
@@ -72,7 +72,7 @@ export function About() {
 
        
 
-        <div className={`about-grid stagger-children ${isVisible ? 'visible' : ''}`}>
+        <div className={`about-grid stagger-alternate ${isVisible ? 'visible' : ''}`}>
           {/* Left Column */}
           <div className="flex flex-col gap-6">
             {/* Who I Am */}

@@ -76,7 +76,7 @@ export function Skills() {
   }, {} as Record<string, Skill[]>);
 
   return (
-    <section ref={sectionRef} id="skills" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
+    <section ref={sectionRef} id="skills" className={`section relative section-animate-elastic ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
       {user && (
         <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
@@ -111,7 +111,7 @@ export function Skills() {
           </p>
         </div>
 
-        <div className={`skills-grid stagger-children ${isVisible ? 'visible' : ''}`}>
+        <div className={`skills-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
           {Object.entries(skillsByCategory).map(([category, categorySkills], index) => {
             const config = categoryConfig[category] || { color: "primary" };
             

@@ -105,7 +105,7 @@ export function Contact() {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className={`section relative section-animate ${isVisible ? 'visible' : ''}`}>
+    <section ref={sectionRef} id="contact" className={`section relative section-animate-flip ${isVisible ? 'visible' : ''}`}>
       {/* Background decoration */}
       <div 
         className="bg-blob bg-blob-primary" 
@@ -132,7 +132,7 @@ export function Contact() {
           </p>
         </div>
 
-        <div className={`contact-grid stagger-children ${isVisible ? 'visible' : ''}`}>
+        <div className={`contact-grid stagger-wave ${isVisible ? 'visible' : ''}`}>
           {/* Contact Info */}
           <div className="contact-info-section">
             <div>
