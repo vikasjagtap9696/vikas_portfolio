@@ -12,11 +12,13 @@ import { AIChatbot } from "@/components/portfolio/AIChatbot";
 import { AdminToolbar } from "@/components/admin/AdminToolbar";
 import { CursorTrail } from "@/components/portfolio/CursorTrail";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
+import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 
 const Index = () => {
   return (
     <div style={{ minHeight: "100vh", background: "var(--color-background)" }}>
       <ScrollProgress />
+      <SectionIndicator />
       <CursorTrail />
       <Navbar />
       <Hero />
