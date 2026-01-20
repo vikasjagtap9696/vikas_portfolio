@@ -29,7 +29,17 @@ export function Navbar() {
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: "smooth" });
+    if (element) {
+      // Add transition class to body
+      document.body.classList.add("section-transitioning");
+      
+      element.scrollIntoView({ behavior: "smooth" });
+      
+      // Remove transition class after animation
+      setTimeout(() => {
+        document.body.classList.remove("section-transitioning");
+      }, 800);
+    }
   };
 
   return (
