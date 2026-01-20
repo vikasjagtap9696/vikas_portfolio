@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Navbar } from "@/components/portfolio/Navbar";
 import { Hero } from "@/components/portfolio/Hero";
 import { About } from "@/components/portfolio/About";
@@ -15,41 +16,55 @@ import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
 import { ParallaxSection } from "@/components/portfolio/ParallaxSection";
+import { LoadingScreen } from "@/components/portfolio/LoadingScreen";
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <div style={{ minHeight: "100vh", background: "var(--color-background)" }}>
-      <ScrollProgress />
-      <SectionIndicator />
-      <ScrollToTop />
-      <CursorTrail />
-      <Navbar />
-      <Hero />
-      <ParallaxSection variant="circles">
-        <About />
-      </ParallaxSection>
-      <ParallaxSection variant="blobs">
-        <Skills />
-      </ParallaxSection>
-      <ParallaxSection variant="dots">
-        <Projects />
-      </ParallaxSection>
-      <ParallaxSection variant="gradient">
-        <Experience />
-      </ParallaxSection>
-      <ParallaxSection variant="circles">
-        <Certificates />
-      </ParallaxSection>
-      <ParallaxSection variant="blobs">
-        <Resume />
-      </ParallaxSection>
-      <ParallaxSection variant="gradient">
-        <Contact />
-      </ParallaxSection>
-      <Footer />
-      <AIChatbot />
-      <AdminToolbar />
-    </div>
+    <>
+      {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
+      <div 
+        className={`page-content ${!isLoading ? "loaded" : ""}`}
+        style={{ 
+          minHeight: "100vh", 
+          background: "var(--color-background)",
+          opacity: isLoading ? 0 : 1,
+          transition: "opacity 0.5s ease 0.3s",
+        }}
+      >
+        <ScrollProgress />
+        <SectionIndicator />
+        <ScrollToTop />
+        <CursorTrail />
+        <Navbar />
+        <Hero />
+        <ParallaxSection variant="circles">
+          <About />
+        </ParallaxSection>
+        <ParallaxSection variant="blobs">
+          <Skills />
+        </ParallaxSection>
+        <ParallaxSection variant="dots">
+          <Projects />
+        </ParallaxSection>
+        <ParallaxSection variant="gradient">
+          <Experience />
+        </ParallaxSection>
+        <ParallaxSection variant="circles">
+          <Certificates />
+        </ParallaxSection>
+        <ParallaxSection variant="blobs">
+          <Resume />
+        </ParallaxSection>
+        <ParallaxSection variant="gradient">
+          <Contact />
+        </ParallaxSection>
+        <Footer />
+        <AIChatbot />
+        <AdminToolbar />
+      </div>
+    </>
   );
 };
 
