@@ -12,6 +12,7 @@ import { Footer } from "@/components/portfolio/Footer";
 import { AIChatbot } from "@/components/portfolio/AIChatbot";
 import { AdminToolbar } from "@/components/admin/AdminToolbar";
 import { CursorTrail } from "@/components/portfolio/CursorTrail";
+import CustomCursor from "@/components/portfolio/CustomCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
@@ -37,6 +38,7 @@ const Index = () => {
         <SectionIndicator />
         <ScrollToTop />
         <CursorTrail />
+        <CustomCursor />
         <Navbar />
         <Hero />
         <ParallaxSection variant="circles">
