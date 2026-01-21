@@ -18,12 +18,15 @@ import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
 import { ParallaxSection } from "@/components/portfolio/ParallaxSection";
 import { LoadingScreen } from "@/components/portfolio/LoadingScreen";
+import SkipToContent from "@/components/portfolio/SkipToContent";
+import ScrollReveal from "@/components/portfolio/ScrollReveal";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
     <>
+      <SkipToContent />
       {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
       <div 
         className={`page-content ${!isLoading ? "loaded" : ""}`}
@@ -40,28 +43,44 @@ const Index = () => {
         <CursorTrail />
         <CustomCursor />
         <Navbar />
-        <Hero />
-        <ParallaxSection variant="circles">
-          <About />
-        </ParallaxSection>
-        <ParallaxSection variant="blobs">
-          <Skills />
-        </ParallaxSection>
-        <ParallaxSection variant="dots">
-          <Projects />
-        </ParallaxSection>
-        <ParallaxSection variant="gradient">
-          <Experience />
-        </ParallaxSection>
-        <ParallaxSection variant="circles">
-          <Certificates />
-        </ParallaxSection>
-        <ParallaxSection variant="blobs">
-          <Resume />
-        </ParallaxSection>
-        <ParallaxSection variant="gradient">
-          <Contact />
-        </ParallaxSection>
+        <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
+          <Hero />
+          <ScrollReveal animation="fade-up">
+            <ParallaxSection variant="circles">
+              <About />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={100}>
+            <ParallaxSection variant="blobs">
+              <Skills />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up">
+            <ParallaxSection variant="dots">
+              <Projects />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={100}>
+            <ParallaxSection variant="gradient">
+              <Experience />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up">
+            <ParallaxSection variant="circles">
+              <Certificates />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up" delay={100}>
+            <ParallaxSection variant="blobs">
+              <Resume />
+            </ParallaxSection>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-up">
+            <ParallaxSection variant="gradient">
+              <Contact />
+            </ParallaxSection>
+          </ScrollReveal>
+        </main>
         <Footer />
         <AIChatbot />
         <AdminToolbar />
