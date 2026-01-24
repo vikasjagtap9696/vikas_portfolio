@@ -15,9 +15,9 @@ export function LoadingScreen({ onLoadingComplete }: LoadingScreenProps) {
           clearInterval(interval);
           return 100;
         }
-        return prev + Math.random() * 15 + 5;
+        return prev + Math.random() * 25 + 15;
       });
-    }, 150);
+    }, 80);
 
     return () => clearInterval(interval);
   }, []);
@@ -26,8 +26,8 @@ export function LoadingScreen({ onLoadingComplete }: LoadingScreenProps) {
     if (progress >= 100) {
       setTimeout(() => {
         setIsExiting(true);
-        setTimeout(onLoadingComplete, 800);
-      }, 400);
+        setTimeout(onLoadingComplete, 400);
+      }, 200);
     }
   }, [progress, onLoadingComplete]);
 
