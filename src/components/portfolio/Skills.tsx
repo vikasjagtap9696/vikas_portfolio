@@ -12,17 +12,7 @@ const categoryConfig: Record<string, { color: "primary" | "accent" }> = {
   "Tools & Others": { color: "accent" }
 };
 
-const fallbackSkills: Skill[] = [
-  { id: "1", name: "React.js", category: "Frontend", proficiency: 95, icon: null, display_order: 0 },
-  { id: "2", name: "Next.js", category: "Frontend", proficiency: 85, icon: null, display_order: 1 },
-  { id: "3", name: "TypeScript", category: "Frontend", proficiency: 90, icon: null, display_order: 2 },
-  { id: "4", name: "Node.js", category: "Backend", proficiency: 90, icon: null, display_order: 0 },
-  { id: "5", name: "Express.js", category: "Backend", proficiency: 88, icon: null, display_order: 1 },
-  { id: "6", name: "MongoDB", category: "Database", proficiency: 88, icon: null, display_order: 0 },
-  { id: "7", name: "PostgreSQL", category: "Database", proficiency: 82, icon: null, display_order: 1 },
-  { id: "8", name: "Git/GitHub", category: "Tools & Others", proficiency: 95, icon: null, display_order: 0 },
-  { id: "9", name: "Docker", category: "Tools & Others", proficiency: 75, icon: null, display_order: 1 }
-];
+const fallbackSkills: Skill[] = [];
 
 const CategoryIcon = ({ category }: { category: string }) => {
   switch (category) {
