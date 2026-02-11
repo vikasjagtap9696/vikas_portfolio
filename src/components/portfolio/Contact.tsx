@@ -4,30 +4,9 @@ import { z } from "zod";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ScrambleTitle } from "./ScrambleTitle";
 
-const contactInfo = [
-  {
-    label: "Email",
-    value: "vikasjagtap.9996@gmail.com",
-    href: "mailto:vikasjagtap.9996@gmail.com",
-  },
-  {
-    label: "Phone",
-    value: "+91 9145317002",
-    href: "tel:+919145317002",
-  },
-  {
-    label: "Location",
-    value: "Baramati, Maharashtra, India",
-    href: null,
-  },
-];
-
-const socialLinks = [
-  { href: "https://github.com/vikasjagtap9696", label: "GitHub" },
-  { href: "https://www.linkedin.com/in/vikasjagtap9696/", label: "LinkedIn" },
-  { href: "https://twitter.com/yourusername", label: "Twitter" },
-  { href: "https://vikasjagtap.dev", label: "Portfolio" },
-];
+// Contact info will be loaded dynamically
+const contactInfo: { label: string; value: string; href: string | null }[] = [];
+const socialLinks: { href: string; label: string }[] = [];
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),

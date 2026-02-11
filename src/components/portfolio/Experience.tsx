@@ -5,42 +5,7 @@ import { ExperienceManageDialog } from "@/components/admin/ExperienceManageDialo
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ScrambleTitle } from "./ScrambleTitle";
 
-const fallbackExperiences: ExperienceType[] = [
-  {
-    id: "1",
-    title: "Web Developer Intern",
-    company: "Divine Technologies",
-    location: "Baramati, Maharashtra",
-    period: "3 Months Internship",
-    description: [
-      "Developed responsive web pages and user interfaces",
-      "Worked with frontend technologies including HTML, CSS, and JavaScript",
-      "Gained hands-on experience in real-world web development projects",
-      "Collaborated with team members on project deliverables",
-    ],
-    technologies: ["HTML", "CSS", "JavaScript", "React"],
-    is_current: false,
-    experience_type: "internship",
-    display_order: 0
-  },
-  {
-    id: "2",
-    title: "BSc Computer Science",
-    company: "College/University",
-    location: "Baramati, Maharashtra",
-    period: "Graduate",
-    description: [
-      "Completed Bachelor's degree in Computer Science",
-      "Studied core subjects: Java, DBMS, Data Structures, Algorithms",
-      "Developed multiple academic projects using various technologies",
-      "Built strong foundation in programming and problem-solving",
-    ],
-    technologies: ["Java", "SQL", "Python", "C++"],
-    is_current: false,
-    experience_type: "education",
-    display_order: 1
-  },
-];
+const fallbackExperiences: ExperienceType[] = [];
 
 const typeLabels: Record<string, string> = {
   job: "Job",

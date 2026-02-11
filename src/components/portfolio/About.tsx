@@ -13,20 +13,15 @@ export function About() {
   const [openDialog, setOpenDialog] = useState<string | null>(null);
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
 
-  const careerGoals = profileSettings?.career_goals || [
-    "Become an industry-ready all-round developer",
-    "Build products that solve real-world problems",
-    "Contribute to impactful software solutions",
-    "Continuously improve through real-world projects",
-  ];
+  const careerGoals = profileSettings?.career_goals || [];
 
   const parseEducation = (edu: string) => {
     const [title, details] = edu.split("|").map(s => s.trim());
     return { title, details };
   };
 
-  const primaryEdu = parseEducation(profileSettings?.about_education_primary || "Bachelor of Computer Science | Baramati, Maharashtra • Graduate");
-  const secondaryEdu = parseEducation(profileSettings?.about_education_secondary || "Full Stack Development | Self-taught & Continuous Learning");
+  const primaryEdu = parseEducation(profileSettings?.about_education_primary || "");
+  const secondaryEdu = parseEducation(profileSettings?.about_education_secondary || "");
 
   return (
     <section ref={sectionRef} id="about" className={`section section-animate-rotate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
@@ -66,7 +61,7 @@ export function About() {
             About Me
           </ScrambleTitle>
           <p className="section-subtitle">
-            {profileSettings?.about_intro || "A passionate developer committed to creating impactful digital solutions"}
+            {profileSettings?.about_intro || ""}
           </p>
         </div>
 
@@ -87,7 +82,7 @@ export function About() {
                 <h3 className="about-card-title">Who I Am</h3>
               </div>
               <p className="about-card-content">
-                {profileSettings?.about_description || "I am Vikas Prakash Jagtap, a passionate Full Stack Web Developer and Computer Science graduate with strong problem-solving skills and hands-on experience in building scalable web applications. I enjoy working with modern technologies like React, Node.js, Java, SQL, and PostgreSQL. My goal is to become an industry-ready all-round developer and contribute to impactful software solutions."}
+                {profileSettings?.about_description || ""}
               </p>
             </div>
 

@@ -7,15 +7,15 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const name = profileSettings?.hero_name || "Vikas Prakash Jagtap";
-  const initials = name.split(" ").map(n => n[0]).join("").substring(0, 3);
+  const name = profileSettings?.hero_name || "";
+  const initials = name ? name.split(" ").map(n => n[0]).join("").substring(0, 3) : "";
 
   const socialLinks = [
-    { href: profileSettings?.github_url || "https://github.com/vikasjagtap9696", label: "GitHub" },
-    { href: profileSettings?.linkedin_url || "https://www.linkedin.com/in/vikasjagtap9696/", label: "LinkedIn" },
-    { href: profileSettings?.twitter_url || "https://twitter.com/yourusername", label: "Twitter" },
-    { href: `https://${profileSettings?.footer_location || "vikasjagtap.dev"}`, label: "Portfolio" },
-  ];
+    { href: profileSettings?.github_url || "", label: "GitHub" },
+    { href: profileSettings?.linkedin_url || "", label: "LinkedIn" },
+    { href: profileSettings?.twitter_url || "", label: "Twitter" },
+    { href: profileSettings?.footer_location ? `https://${profileSettings.footer_location}` : "", label: "Portfolio" },
+  ].filter(link => link.href);
 
   return (
     <footer className="footer">
@@ -26,7 +26,7 @@ export function Footer() {
               {initials}
             </a>
             <p className="footer-tagline">
-              {profileSettings?.footer_tagline || profileSettings?.hero_subtitle || "Full Stack Web Developer"}
+              {profileSettings?.footer_tagline || profileSettings?.hero_subtitle || ""}
             </p>
           </div>
 

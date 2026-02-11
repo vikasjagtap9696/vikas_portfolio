@@ -27,13 +27,13 @@ export function Hero() {
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const name = profileSettings?.hero_name || "Vikas Prakash Jagtap";
+  const name = profileSettings?.hero_name || "";
   const nameParts = name.split(" ");
   const lastName = nameParts.pop() || "";
   const firstName = nameParts.join(" ");
 
-  const greeting = profileSettings?.hero_title || "Hello, I'm";
-  const subtitle = profileSettings?.hero_subtitle || "Full Stack Web Developer";
+  const greeting = profileSettings?.hero_title || "";
+  const subtitle = profileSettings?.hero_subtitle || "";
 
   const { displayedText: typedGreeting, isComplete: greetingComplete } = useTypingAnimation({
     text: greeting,
@@ -163,7 +163,7 @@ export function Hero() {
               {showSubtitle && typedSubtitle.length < subtitle.length && <span className="typing-cursor">|</span>}
             </h2>
             <p className="hero-bio animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              {profileSettings?.hero_bio || "Passionate developer building scalable web applications with React, Node.js, Java, SQL, and PostgreSQL. Focused on cybersecurity and continuously improving through real-world projects."}
+              {profileSettings?.hero_bio || ""}
             </p>
 
             {/* CTA Buttons */}
@@ -197,7 +197,7 @@ export function Hero() {
             {/* Social Links */}
             <div className="hero-socials animate-fade-in" style={{ animationDelay: "0.6s" }}>
               <a
-                href={profileSettings?.github_url || "https://github.com/vikasjagtap9696"}
+                href={profileSettings?.github_url || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-link glass hover-glow"
@@ -208,7 +208,7 @@ export function Hero() {
                 </svg>
               </a>
               <a
-                href={profileSettings?.linkedin_url || "https://www.linkedin.com/in/vikas-jagtap"}
+                href={profileSettings?.linkedin_url || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-link glass hover-glow"
@@ -219,7 +219,7 @@ export function Hero() {
                 </svg>
               </a>
               <a
-                href={profileSettings?.twitter_url || "https://twitter.com/yourusername"}
+                href={profileSettings?.twitter_url || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-link glass hover-glow"
@@ -230,7 +230,7 @@ export function Hero() {
                 </svg>
               </a>
               <a
-                href={`mailto:${profileSettings?.email || "vikasjagtap.9696@gmail.com"}`}
+                href={`mailto:${profileSettings?.email || ""}`}
                 className="social-link glass hover-glow"
                 aria-label="Email"
               >
@@ -244,39 +244,72 @@ export function Hero() {
 
           {/* Right Content - Avatar & Stats */}
           <div className="hero-right animate-fade-in" style={{ animationDelay: "0.7s" }}>
-            {/* Profile Photo */}
-            <div className="avatar">
-              {profileSettings?.avatar_url ? (
-                <img src={profileSettings.avatar_url} alt="Vikas Prakash Jagtap" />
-              ) : (
-                <div className="avatar-fallback">VP</div>
+            {/* Profile Photo with Change Option */}
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <div className="avatar">
+                {profileSettings?.avatar_url ? (
+                  <img src={profileSettings.avatar_url} alt={name || "Profile"} />
+                ) : (
+                  <div className="avatar-fallback">{name ? name.split(" ").map(n => n[0]).join("").substring(0, 2) : "?"}</div>
+                )}
+              </div>
+              {user && (
+                <button
+                  onClick={() => setOpenDialog("profilePhoto")}
+                  style={{
+                    position: "absolute",
+                    bottom: "0.5rem",
+                    right: "0.5rem",
+                    width: "2.5rem",
+                    height: "2.5rem",
+                    borderRadius: "50%",
+                    background: "var(--gradient-primary)",
+                    border: "2px solid var(--color-background)",
+                    color: "var(--color-primary-foreground)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    boxShadow: "var(--shadow-lg)",
+                    transition: "transform 0.2s ease",
+                    zIndex: 10,
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                  title="Change Profile Photo"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </button>
               )}
             </div>
 
             {/* Stats Grid */}
             <div className="stats-grid">
               <StatCounter 
-                value={profileSettings?.stat_years_experience || "3+"} 
+                value={profileSettings?.stat_years_experience || ""} 
                 label="Years Experience" 
-                detail="Professional development journey"
+                detail=""
                 delay={100} 
               />
               <StatCounter 
-                value={profileSettings?.stat_projects_completed || "25+"} 
+                value={profileSettings?.stat_projects_completed || ""} 
                 label="Projects Completed" 
-                detail="Web apps, APIs & more"
+                detail=""
                 delay={200} 
               />
               <StatCounter 
-                value={profileSettings?.stat_technologies || "15+"} 
+                value={profileSettings?.stat_technologies || ""} 
                 label="Technologies" 
-                detail="React, Node, TypeScript & more"
+                detail=""
                 delay={300} 
               />
               <StatCounter 
-                value={profileSettings?.stat_client_satisfaction || "100%"} 
+                value={profileSettings?.stat_client_satisfaction || ""} 
                 label="Client Satisfaction" 
-                detail="Committed to excellence"
+                detail=""
                 delay={400} 
               />
             </div>
