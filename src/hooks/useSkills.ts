@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { skillsApi } from "@/services/api";
 import { toast } from "sonner";
 
 export interface Skill {
@@ -17,13 +17,8 @@ export function useSkills() {
 
   const fetchSkills = async () => {
     try {
-      const { data, error } = await supabase
-        .from("skills")
-        .select("*")
-        .order("display_order", { ascending: true });
-
-      if (error) throw error;
-      setSkills(data || []);
+      const response = await skillsApi.getAll();
+      setSkills(response.data || []);
     } catch (error) {
       console.error("Error fetching skills:", error);
     } finally {
@@ -37,16 +32,11 @@ export function useSkills() {
 
   const addSkill = async (skill: Omit<Skill, "id">) => {
     try {
-      const { data, error } = await supabase
-        .from("skills")
-        .insert(skill)
-        .select()
-        .single();
-
-      if (error) throw error;
-      setSkills([...skills, data]);
+      const response = await skillsApi.create(skill);
+      const newSkill = response.data;
+      setSkills([...skills, newSkill]);
       toast.success("Skill added successfully!");
-      return data;
+      return newSkill;
     } catch (error: any) {
       toast.error(error.message || "Error adding skill");
       throw error;
@@ -55,17 +45,12 @@ export function useSkills() {
 
   const updateSkill = async (id: string, updates: Partial<Skill>) => {
     try {
-      const { data, error } = await supabase
-        .from("skills")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      setSkills(skills.map(s => s.id === id ? data : s));
+      await skillsApi.update(id, updates);
+      // Optimistic update or refetch. 
+      // The API might not return the full updated object if not implemented to do so.
+      // But let's assume I can refetch or just merge.
+      fetchSkills(); // Refetch for simplicity
       toast.success("Skill updated successfully!");
-      return data;
     } catch (error: any) {
       toast.error(error.message || "Error updating skill");
       throw error;
@@ -74,12 +59,7 @@ export function useSkills() {
 
   const deleteSkill = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("skills")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
+      await skillsApi.delete(id);
       setSkills(skills.filter(s => s.id !== id));
       toast.success("Skill deleted successfully!");
     } catch (error: any) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { experienceApi } from "@/services/api";
 import { toast } from "sonner";
 
 export interface Experience {
@@ -21,13 +21,8 @@ export function useExperiences() {
 
   const fetchExperiences = async () => {
     try {
-      const { data, error } = await supabase
-        .from("experiences")
-        .select("*")
-        .order("display_order", { ascending: true });
-
-      if (error) throw error;
-      setExperiences(data || []);
+      const response = await experienceApi.getAll();
+      setExperiences(response.data || []);
     } catch (error) {
       console.error("Error fetching experiences:", error);
     } finally {
@@ -41,16 +36,11 @@ export function useExperiences() {
 
   const addExperience = async (experience: Omit<Experience, "id">) => {
     try {
-      const { data, error } = await supabase
-        .from("experiences")
-        .insert(experience)
-        .select()
-        .single();
-
-      if (error) throw error;
-      setExperiences([...experiences, data]);
+      const response = await experienceApi.create(experience);
+      // Refetch to get the latest data including ID
+      await fetchExperiences();
       toast.success("Experience added successfully!");
-      return data;
+      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error adding experience");
       throw error;
@@ -59,17 +49,9 @@ export function useExperiences() {
 
   const updateExperience = async (id: string, updates: Partial<Experience>) => {
     try {
-      const { data, error } = await supabase
-        .from("experiences")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      setExperiences(experiences.map(e => e.id === id ? data : e));
+      await experienceApi.update(id, updates);
+      await fetchExperiences();
       toast.success("Experience updated successfully!");
-      return data;
     } catch (error: any) {
       toast.error(error.message || "Error updating experience");
       throw error;
@@ -78,12 +60,7 @@ export function useExperiences() {
 
   const deleteExperience = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("experiences")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
+      await experienceApi.delete(id);
       setExperiences(experiences.filter(e => e.id !== id));
       toast.success("Experience deleted successfully!");
     } catch (error: any) {

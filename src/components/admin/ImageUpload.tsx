@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { uploadApi } from "@/services/api";
 import { Upload, X, Image, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,7 +18,7 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
 
   const handleUpload = async (file: File) => {
     if (!file) return;
-    
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.error("Please upload an image file");
@@ -33,18 +33,8 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${folder ? folder + '/' : ''}${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
+      const response = await uploadApi.upload(file);
+      const publicUrl = response.data.url;
 
       onChange(publicUrl);
       toast.success("Image uploaded successfully!");
@@ -71,7 +61,7 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleUpload(e.dataTransfer.files[0]);
+      handleUpload(e.dataTransfer.files[0]); // Fixed usage
     }
   };
 
@@ -91,15 +81,15 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
         <div className="image-upload-preview">
           <img src={value} alt="Preview" />
           <div className="image-upload-overlay">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="image-upload-remove"
               onClick={handleRemove}
             >
               <X size={16} />
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="image-upload-change"
               onClick={() => inputRef.current?.click()}
               disabled={uploading}
@@ -110,7 +100,7 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
           </div>
         </div>
       ) : (
-        <div 
+        <div
           className={`image-upload-dropzone ${dragActive ? 'active' : ''} ${uploading ? 'uploading' : ''}`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}

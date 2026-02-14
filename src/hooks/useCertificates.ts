@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { certificatesApi } from "@/services/api";
 import { toast } from "sonner";
 import { dataEvents, DATA_EVENTS } from "@/lib/dataEvents";
 
@@ -19,13 +19,8 @@ export function useCertificates() {
 
   const fetchCertificates = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("certificates")
-        .select("*")
-        .order("display_order", { ascending: true });
-
-      if (error) throw error;
-      setCertificates(data || []);
+      const response = await certificatesApi.getAll();
+      setCertificates(response.data || []);
     } catch (error) {
       console.error("Error fetching certificates:", error);
     } finally {
@@ -39,36 +34,17 @@ export function useCertificates() {
     // Subscribe to custom data events (cross-component sync)
     const unsubscribe = dataEvents.subscribe(DATA_EVENTS.CERTIFICATES_UPDATED, fetchCertificates);
 
-    // Subscribe to realtime changes from database
-    const channel = supabase
-      .channel('certificates-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'certificates' },
-        () => {
-          fetchCertificates();
-        }
-      )
-      .subscribe();
-
     return () => {
       unsubscribe();
-      supabase.removeChannel(channel);
     };
   }, [fetchCertificates]);
 
   const addCertificate = async (certificate: Omit<Certificate, "id">) => {
     try {
-      const { data, error } = await supabase
-        .from("certificates")
-        .insert(certificate)
-        .select()
-        .single();
-
-      if (error) throw error;
+      const response = await certificatesApi.create(certificate);
       toast.success("Certificate added successfully!");
       dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
-      return data;
+      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error adding certificate");
       throw error;
@@ -77,17 +53,10 @@ export function useCertificates() {
 
   const updateCertificate = async (id: string, updates: Partial<Certificate>) => {
     try {
-      const { data, error } = await supabase
-        .from("certificates")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
+      const response = await certificatesApi.update(id, updates);
       toast.success("Certificate updated successfully!");
       dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
-      return data;
+      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error updating certificate");
       throw error;
@@ -96,12 +65,7 @@ export function useCertificates() {
 
   const deleteCertificate = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("certificates")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
+      await certificatesApi.delete(id);
       toast.success("Certificate deleted successfully!");
       dataEvents.emit(DATA_EVENTS.CERTIFICATES_UPDATED); // Notify all subscribers
     } catch (error: any) {

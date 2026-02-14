@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { notificationsApi } from "@/services/api";
 import { toast } from "sonner";
 
 export interface NotificationSettings {
@@ -15,39 +15,17 @@ export function useNotificationSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["notification-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("notification_settings")
-        .select("*")
-        .limit(1)
-        .maybeSingle();
-
-      if (error) throw error;
-      return data as NotificationSettings | null;
+      const response = await notificationsApi.get();
+      return response.data as NotificationSettings | null;
     },
   });
 
   const updateSettings = useMutation({
     mutationFn: async (data: { email: string; sendConfirmation: boolean }) => {
-      if (settings?.id) {
-        const { error } = await supabase
-          .from("notification_settings")
-          .update({ 
-            notification_email: data.email,
-            send_confirmation_email: data.sendConfirmation 
-          })
-          .eq("id", settings.id);
-
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("notification_settings")
-          .insert({ 
-            notification_email: data.email,
-            send_confirmation_email: data.sendConfirmation 
-          });
-
-        if (error) throw error;
-      }
+      await notificationsApi.update({
+        notification_email: data.email,
+        send_confirmation_email: data.sendConfirmation
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification-settings"] });

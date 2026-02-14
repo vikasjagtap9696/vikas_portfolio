@@ -1,6 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { resumeApi, uploadApi } from "@/services/api";
 import { toast } from "sonner";
+
+export interface ResumeSettings {
+  id: string;
+  file_url: string | null;
+  file_name: string | null;
+  updated_at: string;
+}
 
 export function useResume() {
   const queryClient = useQueryClient();
@@ -8,53 +15,30 @@ export function useResume() {
   const { data: resumeSettings, isLoading } = useQuery({
     queryKey: ["resume-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("resume_settings")
-        .select("*")
-        .limit(1)
-        .single();
-
-      if (error) throw error;
-      return data;
+      const response = await resumeApi.get();
+      return response.data as ResumeSettings | null;
     },
   });
 
   const uploadResume = useMutation({
     mutationFn: async (file: File) => {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `resume.${fileExt}`;
+      // 1. Upload file
+      const uploadResponse = await uploadApi.upload(file);
+      const fileUrl = uploadResponse.data.url;
 
-      // Upload to storage
-      const { error: uploadError } = await supabase.storage
-        .from("resumes")
-        .upload(fileName, file, { upsert: true });
+      // 2. Update resume settings
+      await resumeApi.update({
+        file_url: fileUrl,
+        file_name: file.name
+      });
 
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("resumes")
-        .getPublicUrl(fileName);
-
-      // Update resume settings
-      const { error: updateError } = await supabase
-        .from("resume_settings")
-        .update({
-          file_url: urlData.publicUrl,
-          file_name: file.name,
-          updated_at: new Date().toISOString(),
-        })
-        .neq("id", "00000000-0000-0000-0000-000000000000"); // Update all rows
-
-      if (updateError) throw updateError;
-
-      return urlData.publicUrl;
+      return fileUrl;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resume-settings"] });
       toast.success("Resume uploaded successfully");
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Upload failed");
     },
   });

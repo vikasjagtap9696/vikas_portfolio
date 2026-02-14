@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { authApi } from "@/services/api";
 
 interface InviteAdminDialogProps {
   open: boolean;
@@ -12,6 +12,15 @@ export function InviteAdminDialog({ open, onClose }: InviteAdminDialogProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // NOT IMPLEMENTED YET IN BACKEND
+  // I will just mock it or show not implemented toast
+
+  const handleInvite = async () => {
+    toast.error("Invite Admin functionality is not yet implemented in this backend version.");
+    onClose();
+  };
+
+  /*
   const handleInvite = async () => {
     if (!email) {
       toast.error("Please enter an email address");
@@ -20,39 +29,12 @@ export function InviteAdminDialog({ open, onClose }: InviteAdminDialogProps) {
 
     setLoading(true);
     try {
-      // First, check if user exists by email (we'll need to find the user_id)
-      // Since we can't directly query auth.users, we'll check profiles table
-      const { data: profiles, error: profileError } = await supabase
-        .from("profiles")
-        .select("user_id")
-        .eq("email", email)
-        .single();
+       // TODO: API call to invite admin
+       // await authApi.inviteAdmin(email);
+       toast.success("Admin role granted successfully!");
+       setEmail("");
+       onClose();
 
-      if (profileError || !profiles) {
-        toast.error("User not found. They must sign up first.");
-        setLoading(false);
-        return;
-      }
-
-      // Add admin role
-      const { error } = await supabase
-        .from("user_roles")
-        .insert({
-          user_id: profiles.user_id,
-          role: "admin",
-        });
-
-      if (error) {
-        if (error.code === "23505") {
-          toast.error("User is already an admin");
-        } else {
-          throw error;
-        }
-      } else {
-        toast.success("Admin role granted successfully!");
-        setEmail("");
-        onClose();
-      }
     } catch (error) {
       console.error("Error inviting admin:", error);
       toast.error("Failed to grant admin role");
@@ -60,13 +42,14 @@ export function InviteAdminDialog({ open, onClose }: InviteAdminDialogProps) {
       setLoading(false);
     }
   };
+  */
 
   return (
     <Modal open={open} onClose={onClose} title="Invite Admin">
       <p style={{ color: "var(--color-text-muted)", marginBottom: "1rem" }}>
         Enter the email address of a registered user to grant them admin access.
       </p>
-      
+
       <div className="form-group">
         <label className="form-label">Email Address</label>
         <input

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { projectsApi } from "@/services/api";
 import { toast } from "sonner";
 import { dataEvents, DATA_EVENTS } from "@/lib/dataEvents";
 
@@ -21,13 +21,8 @@ export function useProjects() {
 
   const fetchProjects = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .order("display_order", { ascending: true });
-
-      if (error) throw error;
-      setProjects(data || []);
+      const response = await projectsApi.getAll();
+      setProjects(response.data || []);
     } catch (error) {
       console.error("Error fetching projects:", error);
     } finally {
@@ -41,36 +36,17 @@ export function useProjects() {
     // Subscribe to custom data events (cross-component sync)
     const unsubscribe = dataEvents.subscribe(DATA_EVENTS.PROJECTS_UPDATED, fetchProjects);
 
-    // Subscribe to realtime changes from database
-    const channel = supabase
-      .channel('projects-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'projects' },
-        () => {
-          fetchProjects();
-        }
-      )
-      .subscribe();
-
     return () => {
       unsubscribe();
-      supabase.removeChannel(channel);
     };
   }, [fetchProjects]);
 
   const addProject = async (project: Omit<Project, "id">) => {
     try {
-      const { data, error } = await supabase
-        .from("projects")
-        .insert(project)
-        .select()
-        .single();
-
-      if (error) throw error;
+      const response = await projectsApi.create(project);
       toast.success("Project added successfully!");
       dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
-      return data;
+      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error adding project");
       throw error;
@@ -79,17 +55,10 @@ export function useProjects() {
 
   const updateProject = async (id: string, updates: Partial<Project>) => {
     try {
-      const { data, error } = await supabase
-        .from("projects")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
+      const response = await projectsApi.update(id, updates);
       toast.success("Project updated successfully!");
       dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
-      return data;
+      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error updating project");
       throw error;
@@ -98,12 +67,7 @@ export function useProjects() {
 
   const deleteProject = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("projects")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
+      await projectsApi.delete(id);
       toast.success("Project deleted successfully!");
       dataEvents.emit(DATA_EVENTS.PROJECTS_UPDATED); // Notify all subscribers
     } catch (error: any) {
