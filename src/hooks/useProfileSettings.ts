@@ -26,6 +26,7 @@ interface ProfileSettings {
   footer_tagline: string | null;
   footer_copyright: string | null;
   footer_location: string | null;
+  what_i_do: { title: string; tech: string }[] | null;
 }
 
 export function useProfileSettings() {
@@ -39,7 +40,7 @@ export function useProfileSettings() {
         .single();
 
       if (error) throw error;
-      return data as ProfileSettings;
+      return data as unknown as ProfileSettings;
     },
   });
 }
@@ -73,6 +74,7 @@ export function useUpdateProfileSettings() {
       footer_tagline?: string | null;
       footer_copyright?: string | null;
       footer_location?: string | null;
+      what_i_do?: { title: string; tech: string }[] | null;
     }) => {
       const { id, ...fieldsToUpdate } = updates;
       const { error } = await supabase

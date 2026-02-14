@@ -14,6 +14,7 @@ export function About() {
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
 
   const careerGoals = profileSettings?.career_goals || [];
+  const whatIDo = profileSettings?.what_i_do || [];
 
   const parseEducation = (edu: string) => {
     const [title, details] = edu.split("|").map(s => s.trim());
@@ -145,27 +146,12 @@ export function About() {
                 <h3 className="about-card-title">What I Do</h3>
               </div>
               <div className="what-i-do-grid">
-                <div className="what-i-do-item">
-                  <p className="what-i-do-title">Frontend</p>
-                  <p className="what-i-do-tech">React, Next.js, TypeScript</p>
-                </div>
-                <div className="what-i-do-item">
-                  <p className="what-i-do-title">Backend</p>
-                  <p className="what-i-do-tech">Node.js, Java, Express</p>
-                </div>
-                <div className="what-i-do-item">
-                  <p className="what-i-do-title">Database</p>
-                  <p className="what-i-do-tech">SQL, PostgreSQL, MongoDB</p>
-                </div>
-                <div className="what-i-do-item" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                  <div>
-                    <p className="what-i-do-title">Security</p>
-                    <p className="what-i-do-tech">Cybersecurity</p>
+                {whatIDo.map((item, index) => (
+                  <div key={index} className="what-i-do-item">
+                    <p className="what-i-do-title">{item.title}</p>
+                    <p className="what-i-do-tech">{item.tech}</p>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
