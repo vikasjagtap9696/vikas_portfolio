@@ -174,6 +174,7 @@ export type Database = {
           stat_years_experience: string | null
           twitter_url: string | null
           updated_at: string
+          what_i_do: Json | null
         }
         Insert: {
           about_description?: string | null
@@ -202,6 +203,7 @@ export type Database = {
           stat_years_experience?: string | null
           twitter_url?: string | null
           updated_at?: string
+          what_i_do?: Json | null
         }
         Update: {
           about_description?: string | null
@@ -230,6 +232,7 @@ export type Database = {
           stat_years_experience?: string | null
           twitter_url?: string | null
           updated_at?: string
+          what_i_do?: Json | null
         }
         Relationships: []
       }
