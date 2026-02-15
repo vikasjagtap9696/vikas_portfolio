@@ -22,7 +22,8 @@ router.put('/', async (req, res) => {
             about_education_primary, about_education_secondary, career_goals,
             hero_background_url, about_image_url,
             stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-            footer_tagline, footer_location
+            footer_tagline, footer_location,
+            what_i_do
         } = req.body;
 
         // Check if exists
@@ -37,7 +38,8 @@ router.put('/', async (req, res) => {
                  about_education_primary=?, about_education_secondary=?, career_goals=?,
                  hero_background_url=?, about_image_url=?,
                  stat_years_experience=?, stat_projects_completed=?, stat_technologies=?, stat_client_satisfaction=?,
-                 footer_tagline=?, footer_location=?
+                 footer_tagline=?, footer_location=?,
+                 what_i_do=?
                  WHERE id=?`,
                 [hero_title, hero_subtitle, hero_name, hero_bio,
                     about_intro, about_description, avatar_url,
@@ -46,6 +48,7 @@ router.put('/', async (req, res) => {
                     hero_background_url, about_image_url,
                     stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
                     footer_tagline, footer_location,
+                    JSON.stringify(what_i_do || []),
                     existing[0].id]
             );
         } else {
@@ -57,15 +60,15 @@ router.put('/', async (req, res) => {
                  about_education_primary, about_education_secondary, career_goals,
                  hero_background_url, about_image_url,
                  stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-                 footer_tagline, footer_location) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                 footer_tagline, footer_location, what_i_do) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [hero_title, hero_subtitle, hero_name, hero_bio,
                     about_intro, about_description, avatar_url,
                     github_url, linkedin_url, twitter_url, email, footer_copyright,
                     about_education_primary, about_education_secondary, JSON.stringify(career_goals || []),
                     hero_background_url, about_image_url,
                     stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-                    footer_tagline, footer_location]
+                    footer_tagline, footer_location, JSON.stringify(what_i_do || [])]
             );
         }
         res.json({ message: 'Profile updated' });

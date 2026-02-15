@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { contactApi } from "@/services/api";
+import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { z } from "zod";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ScrambleTitle } from "./ScrambleTitle";
-
-// Contact info will be loaded dynamically
-const contactInfo: { label: string; value: string; href: string | null }[] = [];
-const socialLinks: { href: string; label: string }[] = [];
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -23,6 +20,7 @@ type ToastState = {
 };
 
 export function Contact() {
+  const { data: profileSettings } = useProfileSettings();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,6 +31,17 @@ export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<ToastState>({ show: false, title: "", description: "", variant: "default" });
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+
+  const contactInfo = [
+    profileSettings?.email ? { label: "Email", value: profileSettings.email, href: `mailto:${profileSettings.email}` } : null,
+    profileSettings?.footer_location ? { label: "Location", value: profileSettings.footer_location, href: null } : null,
+  ].filter(Boolean) as { label: string; value: string; href: string | null }[];
+
+  const socialLinks = [
+    profileSettings?.github_url ? { href: profileSettings.github_url, label: "GitHub" } : null,
+    profileSettings?.linkedin_url ? { href: profileSettings.linkedin_url, label: "LinkedIn" } : null,
+    profileSettings?.twitter_url ? { href: profileSettings.twitter_url, label: "Twitter" } : null,
+  ].filter(Boolean) as { href: string; label: string }[];
 
   const showToast = (title: string, description: string, variant: "default" | "destructive" = "default") => {
     setToast({ show: true, title, description, variant });

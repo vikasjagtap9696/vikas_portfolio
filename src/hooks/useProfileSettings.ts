@@ -26,6 +26,7 @@ interface ProfileSettings {
   footer_tagline: string | null;
   footer_copyright: string | null;
   footer_location: string | null;
+  what_i_do: { title: string; tech: string }[] | null;
 }
 
 export function useProfileSettings() {
@@ -34,9 +35,6 @@ export function useProfileSettings() {
     queryFn: async () => {
       const response = await profileApi.get();
       // Ensure career_goals and stats are parsed if they come as string from MySQL JSON
-      // Also might need to map fields if they differ slightly
-      // The backend returns the object directly. MySQL JS driver might parse JSON automatically?
-      // Let's assume it does for 'career_goals' (JSON type).
       return response.data as ProfileSettings;
     },
   });
@@ -71,6 +69,7 @@ export function useUpdateProfileSettings() {
       footer_tagline?: string | null;
       footer_copyright?: string | null;
       footer_location?: string | null;
+      what_i_do?: { title: string; tech: string }[] | null;
     }) => {
       await profileApi.update(updates);
     },
