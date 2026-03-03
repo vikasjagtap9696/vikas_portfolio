@@ -20,7 +20,7 @@ export function DeleteConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="modal-overlay-enhanced" onClick={onClose} style={{ cursor: 'auto' }}>
+    <div className="modal-overlay-enhanced" onClick={onClose} style={{ cursor: 'auto', zIndex: 199999 }}>
       <div 
         className="delete-confirm-dialog"
         onClick={(e) => e.stopPropagation()}
