@@ -90,7 +90,7 @@ export function Projects() {
   return (
     <section ref={sectionRef} id="projects" className={`section section-animate-curtain visible`} style={{ position: "relative" }}>
       {/* Admin Edit Button */}
-      {user && projects.length > 0 && (
+      {user && (
         <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 50 }}>
           <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

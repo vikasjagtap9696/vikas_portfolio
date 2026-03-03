@@ -103,6 +103,46 @@ export function Skills() {
           </p>
         </div>
 
+        {Object.keys(skillsByCategory).length === 0 ? (
+          <div className="empty-state glass" style={{
+            textAlign: "center",
+            padding: "4rem 2rem",
+            borderRadius: "var(--radius-xl)",
+            maxWidth: "500px",
+            margin: "0 auto"
+          }}>
+            <div className="empty-state-icon" style={{
+              width: "80px",
+              height: "80px",
+              margin: "0 auto 1.5rem",
+              background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2))",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "0.5rem", color: "hsl(var(--foreground))" }}>
+              No Skills Yet
+            </h3>
+            <p style={{ color: "hsl(var(--muted-foreground))", marginBottom: "1.5rem" }}>
+              {user ? "Add your first skill to showcase your expertise." : "Skills will appear here once added."}
+            </p>
+            {user && (
+              <button className="btn btn-primary" onClick={() => setShowDialog(true)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: "0.5rem" }}>
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Skill
+              </button>
+            )}
+          </div>
+        ) : (
         <div className={`skills-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
           {Object.entries(skillsByCategory).map(([category, categorySkills], index) => {
             const config = categoryConfig[category] || { color: "primary" };
@@ -140,6 +180,7 @@ export function Skills() {
             );
           })}
         </div>
+        )}
 
         {/* Tech Stack Tags */}
         <div style={{ marginTop: "4rem" }}>

@@ -80,7 +80,7 @@ export function Certificates() {
   return (
     <section ref={sectionRef} id="certificates" className={`section relative section-animate-zoom ${isVisible ? 'visible' : ''}`}>
       {/* Admin Edit Button */}
-      {user && certificates.length > 0 && (
+      {user && (
         <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 50 }}>
           <button className="section-edit-btn" onClick={() => setShowDialog(true)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
