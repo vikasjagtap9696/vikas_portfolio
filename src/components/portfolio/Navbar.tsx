@@ -84,11 +84,6 @@ export function Navbar() {
           >
             Hire Me
           </button>
-          {!user && (
-            <Link to="/auth" className="navbar-link" style={{ marginLeft: "0.5rem" }}>
-              Admin
-            </Link>
-          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -140,16 +135,6 @@ export function Navbar() {
             >
               Hire Me
             </button>
-            {!user && (
-              <Link
-                to="/auth"
-                className="navbar-link"
-                style={{ padding: "0.5rem 0", textAlign: "center" }}
-                onClick={() => setIsOpen(false)}
-              >
-                Admin Login
-              </Link>
-            )}
           </div>
         </div>
       )}
