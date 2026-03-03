@@ -10,47 +10,40 @@ interface StatCounterProps {
 
 export function StatCounter({ value, label, detail, delay = 0 }: StatCounterProps) {
   const { value: numValue, suffix, prefix } = parseStatValue(value);
-  const { ref: counterRef, displayValue } = useCounterAnimation({
+  const { ref, displayValue } = useCounterAnimation({
     end: numValue,
     duration: 2000,
     delay,
     suffix,
     prefix,
   });
-  
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Sync refs
-  useEffect(() => {
-    if (cardRef.current && counterRef.current !== cardRef.current) {
-      (counterRef as React.MutableRefObject<HTMLDivElement | null>).current = cardRef.current;
-    }
-  }, [counterRef]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    
-    const rect = cardRef.current.getBoundingClientRect();
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
+
     const rotateX = (y - centerY) / 10;
     const rotateY = (centerX - x) / 10;
-    
-    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-  }, []);
+
+    el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+  }, [ref]);
 
   const handleMouseLeave = useCallback(() => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-  }, []);
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+  }, [ref]);
 
   return (
-    <div 
-      ref={cardRef}
-      className="stat-card stat-card-3d glass hover-glow stat-reveal" 
+    <div
+      ref={ref}
+      className="stat-card stat-card-3d glass hover-glow stat-reveal"
       style={{ animationDelay: `${delay / 1000}s` }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
