@@ -53,19 +53,25 @@ export function ProjectsManageDialog({ open, onClose }: ProjectsManageDialogProp
   const handleSave = async () => {
     if (!formData.title) return;
     setIsSaving(true);
-    const data = {
+
+    const baseData = {
       title: formData.title,
-      description: formData.description,
-      image_url: formData.image_url,
-      github_url: formData.github_url,
-      live_url: formData.live_url,
+      description: formData.description || "",
+      image_url: formData.image_url || "",
+      github_url: formData.github_url || "",
+      live_url: formData.live_url || "",
       tech_stack: formData.tech_stack.split(",").map(s => s.trim()).filter(Boolean),
-      featured: formData.featured,
-      display_order: projects.length
+      featured: formData.featured || false
     };
+
     try {
-      if (editingId) await updateProject(editingId, data);
-      else await addProject(data);
+      if (editingId) {
+        // Partial update via helper or direct call - backend now supports partial
+        await updateProject(editingId, baseData);
+      } else {
+        // For new projects, add display_order
+        await addProject({ ...baseData, display_order: projects.length });
+      }
       resetForm();
     } catch (error) {
       console.error(error);

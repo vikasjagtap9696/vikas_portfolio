@@ -30,12 +30,12 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
   });
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({ 
-    title: "", 
-    issuer: "", 
-    issue_date: "", 
-    credential_url: "", 
-    image_url: "" 
+  const [formData, setFormData] = useState({
+    title: "",
+    issuer: "",
+    issue_date: "",
+    credential_url: "",
+    image_url: ""
   });
 
   const resetForm = () => {
@@ -48,7 +48,7 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
     setFormData({
       title: c.title,
       issuer: c.issuer,
-      issue_date: c.issue_date || "",
+      issue_date: c.issue_date ? new Date(c.issue_date).toISOString().split('T')[0] : "",
       credential_url: c.credential_url || "",
       image_url: c.image_url || ""
     });
@@ -59,11 +59,21 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
   const handleSave = async () => {
     if (!formData.title || !formData.issuer) return;
     setIsSaving(true);
+
+    // Prepare data
+    const baseData = {
+      title: formData.title,
+      issuer: formData.issuer,
+      issue_date: formData.issue_date || null,
+      credential_url: formData.credential_url || null,
+      image_url: formData.image_url || null
+    };
+
     try {
       if (editingId) {
-        await updateCertificate(editingId, formData);
+        await updateCertificate(editingId, baseData);
       } else {
-        await addCertificate({ ...formData, display_order: certificates.length });
+        await addCertificate({ ...baseData, display_order: certificates.length });
       }
       resetForm();
     } catch (error) {
@@ -99,110 +109,10 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
     <>
       <Modal open={open} onClose={onClose} title="Manage Certificates" size="lg" icon={<Award size={20} />}>
         {/* Add Button */}
-        {!showForm && (
-          <button className="btn-add-new" onClick={() => setShowForm(true)}>
-            <Plus size={18} />
-            <span>Add New Certificate</span>
-          </button>
-        )}
-
-        {/* Form */}
-        {showForm && (
-          <div className="admin-form-card animate-scale-in">
-            <div className="admin-form-header">
-              <h4>{editingId ? "Edit Certificate" : "Add New Certificate"}</h4>
-              <button className="btn-icon-close" onClick={resetForm}>
-                <X size={16} />
-              </button>
-            </div>
-            
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon">🏆</span>
-                  Certificate Title
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.title} 
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="AWS Solutions Architect"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon">🏛️</span>
-                  Issuer
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.issuer} 
-                  onChange={(e) => setFormData({ ...formData, issuer: e.target.value })}
-                  placeholder="Amazon Web Services"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon"><Calendar size={14} /></span>
-                  Issue Date
-                </label>
-                <input 
-                  type="date" 
-                  className="form-input-enhanced" 
-                  value={formData.issue_date} 
-                  onChange={(e) => setFormData({ ...formData, issue_date: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon"><ExternalLink size={14} /></span>
-                  Credential URL
-                </label>
-                <input 
-                  type="url" 
-                  className="form-input-enhanced" 
-                  value={formData.credential_url} 
-                  onChange={(e) => setFormData({ ...formData, credential_url: e.target.value })}
-                  placeholder="https://credential.link/..."
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label-enhanced">
-                <span className="form-label-icon">🖼️</span>
-                Certificate Image
-              </label>
-              <ImageUpload
-                value={formData.image_url}
-                onChange={(url) => setFormData({ ...formData, image_url: url })}
-                bucket="images"
-                folder="certificates"
-                placeholder="Upload Certificate Image"
-              />
-            </div>
-            
-            <div className="form-actions-enhanced">
-              <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
-              <button 
-                className="btn btn-primary btn-glow" 
-                onClick={handleSave}
-                disabled={!formData.title || !formData.issuer || isSaving}
-              >
-                {isSaving ? (
-                  <><span className="spinner-small" /> Saving...</>
-                ) : (
-                  <><CheckCircle size={16} /> {editingId ? "Update" : "Add"} Certificate</>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
+        <button className="btn-add-new" onClick={() => setShowForm(true)}>
+          <Plus size={18} />
+          <span>Add New Certificate</span>
+        </button>
 
         {/* Certificates List */}
         <div className="admin-list-container">
@@ -220,8 +130,8 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
           ) : (
             <div className="certificates-grid-admin">
               {certificates.map((cert, index) => (
-                <div 
-                  key={cert.id} 
+                <div
+                  key={cert.id}
                   className="certificate-card-admin animate-fade-in"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
@@ -242,25 +152,15 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
                         <Calendar size={12} /> {formatDate(cert.issue_date)}
                       </p>
                     )}
-                    {cert.credential_url && (
-                      <a 
-                        href={cert.credential_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="certificate-link"
-                      >
-                        <ExternalLink size={12} /> View Credential
-                      </a>
-                    )}
                   </div>
                   <div className="certificate-card-actions">
-                    <button 
+                    <button
                       className="btn-action btn-action-edit"
                       onClick={() => handleEdit(cert)}
                     >
                       <Edit3 size={14} />
                     </button>
-                    <button 
+                    <button
                       className="btn-action btn-action-delete"
                       onClick={() => handleDeleteClick(cert)}
                     >
@@ -271,6 +171,104 @@ export function CertificatesManageDialog({ open, onClose }: CertificatesManageDi
               ))}
             </div>
           )}
+        </div>
+      </Modal>
+
+      {/* Add/Edit Certificate Modal (Advanced Level) */}
+      <Modal
+        open={showForm}
+        onClose={resetForm}
+        title={editingId ? "Edit Certificate" : "Add New Certificate"}
+        size="lg"
+        icon={editingId ? <Edit3 size={20} /> : <Plus size={20} />}
+      >
+        <div className="admin-form-container">
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon">🏆</span>
+                Certificate Title
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="AWS Solutions Architect"
+                autoFocus
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon">🏛️</span>
+                Issuer
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.issuer}
+                onChange={(e) => setFormData({ ...formData, issuer: e.target.value })}
+                placeholder="Amazon Web Services"
+              />
+            </div>
+          </div>
+
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon"><Calendar size={14} /></span>
+                Issue Date
+              </label>
+              <input
+                type="date"
+                className="form-input-enhanced"
+                value={formData.issue_date}
+                onChange={(e) => setFormData({ ...formData, issue_date: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon"><ExternalLink size={14} /></span>
+                Credential URL
+              </label>
+              <input
+                type="url"
+                className="form-input-enhanced"
+                value={formData.credential_url}
+                onChange={(e) => setFormData({ ...formData, credential_url: e.target.value })}
+                placeholder="https://credential.link/..."
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label-enhanced">
+              <span className="form-label-icon">🖼️</span>
+              Certificate Image
+            </label>
+            <ImageUpload
+              value={formData.image_url}
+              onChange={(url) => setFormData({ ...formData, image_url: url })}
+              bucket="images"
+              folder="certificates"
+              placeholder="Upload Certificate Image"
+            />
+          </div>
+
+          <div className="form-actions-enhanced" style={{ borderTop: 'none', paddingTop: '1.5rem' }}>
+            <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
+            <button
+              className="btn btn-primary btn-glow"
+              onClick={handleSave}
+              disabled={!formData.title || !formData.issuer || isSaving}
+            >
+              {isSaving ? (
+                <><span className="spinner-small" /> Saving...</>
+              ) : (
+                <><CheckCircle size={16} /> {editingId ? "Update" : "Add"} Certificate</>
+              )}
+            </button>
+          </div>
         </div>
       </Modal>
 

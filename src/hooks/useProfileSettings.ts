@@ -29,13 +29,21 @@ interface ProfileSettings {
   what_i_do: { title: string; tech: string }[] | null;
 }
 
+const mapFromApi = (data: any): ProfileSettings => {
+  if (!data) return {} as ProfileSettings;
+  return {
+    ...data,
+    career_goals: typeof data.career_goals === "string" ? JSON.parse(data.career_goals) : (data.career_goals || []),
+    what_i_do: typeof data.what_i_do === "string" ? JSON.parse(data.what_i_do) : (data.what_i_do || []),
+  };
+};
+
 export function useProfileSettings() {
   return useQuery({
     queryKey: ["profile-settings"],
     queryFn: async () => {
       const response = await profileApi.get();
-      // Ensure career_goals and stats are parsed if they come as string from MySQL JSON
-      return response.data as ProfileSettings;
+      return mapFromApi(response.data);
     },
   });
 }

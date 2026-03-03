@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
 import { useProfileSettings, useUpdateProfileSettings } from "@/hooks/useProfileSettings";
 import { toast } from "sonner";
+import { CheckCircle, User, Type, FileText } from "lucide-react";
 
 interface HeroTextDialogProps {
   open: boolean;
@@ -11,7 +12,7 @@ interface HeroTextDialogProps {
 export function HeroTextDialog({ open, onClose }: HeroTextDialogProps) {
   const { data: profile } = useProfileSettings();
   const updateProfile = useUpdateProfileSettings();
-  
+
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -28,7 +29,7 @@ export function HeroTextDialog({ open, onClose }: HeroTextDialogProps) {
 
   const handleSave = async () => {
     if (!profile?.id) return;
-    
+
     try {
       await updateProfile.mutateAsync({
         id: profile.id,
@@ -45,52 +46,80 @@ export function HeroTextDialog({ open, onClose }: HeroTextDialogProps) {
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Edit Hero Text">
-      <div className="form-group">
-        <label className="form-label">Name</label>
-        <input
-          type="text"
-          className="form-input"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your Name"
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Title</label>
-        <input
-          type="text"
-          className="form-input"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Your Title"
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Subtitle</label>
-        <input
-          type="text"
-          className="form-input"
-          value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          placeholder="Your Subtitle"
-        />
-      </div>
-      <div className="form-group">
-        <label className="form-label">Bio</label>
-        <textarea
-          className="form-input"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          placeholder="Short bio"
-          rows={3}
-        />
-      </div>
-      <div className="modal-actions">
-        <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-        <button className="btn btn-primary" onClick={handleSave} disabled={updateProfile.isPending}>
-          {updateProfile.isPending ? "Saving..." : "Save"}
-        </button>
+    <Modal open={open} onClose={onClose} title="Edit Hero Text" size="lg">
+      <div className="admin-form-container">
+        <div className="form-grid-2">
+          <div className="form-group">
+            <label className="form-label-enhanced">
+              <span className="form-label-icon"><User size={14} /></span>
+              Your Name
+            </label>
+            <input
+              type="text"
+              className="form-input-enhanced"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Vikas Jagtap"
+              autoFocus
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label-enhanced">
+              <span className="form-label-icon"><Type size={14} /></span>
+              Professional Title
+            </label>
+            <input
+              type="text"
+              className="form-input-enhanced"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Full Stack Developer"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label-enhanced">
+            <span className="form-label-icon"><Type size={14} /></span>
+            Subtitle / Intro Line
+          </label>
+          <input
+            type="text"
+            className="form-input-enhanced"
+            value={subtitle}
+            onChange={(e) => setSubtitle(e.target.value)}
+            placeholder="Crafting Digital Experiences..."
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label-enhanced">
+            <span className="form-label-icon"><FileText size={14} /></span>
+            Hero Bio
+          </label>
+          <textarea
+            className="form-textarea-enhanced"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Tell your story in a few sentences..."
+            rows={4}
+          />
+        </div>
+
+        <div className="form-actions-enhanced" style={{ borderTop: 'none', paddingTop: '1.5rem' }}>
+          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+          <button
+            className="btn btn-primary btn-glow"
+            onClick={handleSave}
+            disabled={updateProfile.isPending}
+          >
+            {updateProfile.isPending ? (
+              <><span className="spinner-small" /> Saving...</>
+            ) : (
+              <><CheckCircle size={16} /> Update Hero</>
+            )}
+          </button>
+        </div>
       </div>
     </Modal>
   );

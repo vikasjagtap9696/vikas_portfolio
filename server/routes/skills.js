@@ -29,13 +29,15 @@ router.post('/', async (req, res) => {
 // Update skill
 router.put('/:id', async (req, res) => {
     try {
-        const { name, proficiency, category, icon, display_order } = req.body;
-        await db.query(
-            'UPDATE skills SET name=?, proficiency=?, category=?, icon=?, display_order=? WHERE id=?',
-            [name, proficiency, category, icon, display_order, req.params.id]
-        );
+        const updates = req.body;
+        const id = req.params.id;
+
+        await db.query('UPDATE skills SET ? WHERE id = ?', [updates, id]);
+
+        console.log(`Skill ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Skill updated' });
     } catch (err) {
+        console.error('Update skill error:', err);
         res.status(500).json({ error: err.message });
     }
 });

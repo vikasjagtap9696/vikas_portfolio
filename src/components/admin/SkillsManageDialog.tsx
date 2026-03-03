@@ -55,11 +55,19 @@ export function SkillsManageDialog({ open, onClose }: SkillsManageDialogProps) {
   const handleSave = async () => {
     if (!formData.name || !formData.category) return;
     setIsSaving(true);
+
+    const baseData = {
+      name: formData.name,
+      category: formData.category,
+      icon: formData.icon || "",
+      proficiency: formData.proficiency || 80
+    };
+
     try {
       if (editingId) {
-        await updateSkill(editingId, formData);
+        await updateSkill(editingId, baseData);
       } else {
-        await addSkill({ ...formData, display_order: skills.length });
+        await addSkill({ ...baseData, display_order: skills.length });
       }
       resetForm();
     } catch (error) {

@@ -34,15 +34,19 @@ router.post('/', async (req, res) => {
 // Update project
 router.put('/:id', async (req, res) => {
     try {
-        const { title, description, image_url, live_url, github_url, tech_stack, featured, display_order } = req.body;
-        const techStackJson = JSON.stringify(tech_stack || []);
+        const updates = req.body;
+        const id = req.params.id;
 
-        await db.query(
-            'UPDATE projects SET title=?, description=?, image_url=?, live_url=?, github_url=?, tech_stack=?, featured=?, display_order=? WHERE id=?',
-            [title, description, image_url, live_url, github_url, techStackJson, featured, display_order, req.params.id]
-        );
+        if (updates.tech_stack && Array.isArray(updates.tech_stack)) {
+            updates.tech_stack = JSON.stringify(updates.tech_stack);
+        }
+
+        await db.query('UPDATE projects SET ? WHERE id = ?', [updates, id]);
+
+        console.log(`Project ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Project updated' });
     } catch (err) {
+        console.error('Update project error:', err);
         res.status(500).json({ error: err.message });
     }
 });

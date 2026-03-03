@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
 import { Modal } from "./Modal";
-import { useProfileSettings, useUpdateProfileSettings, useUploadAvatar } from "@/hooks/useProfileSettings";
+import { useProfileSettings, useUpdateProfileSettings } from "@/hooks/useProfileSettings";
+import { ImageUpload } from "./ImageUpload";
 import { toast } from "sonner";
-import { Upload } from "lucide-react";
+import { User, CheckCircle } from "lucide-react";
 
 interface ProfilePhotoDialogProps {
   open: boolean;
@@ -12,100 +12,48 @@ interface ProfilePhotoDialogProps {
 export function ProfilePhotoDialog({ open, onClose }: ProfilePhotoDialogProps) {
   const { data: profile } = useProfileSettings();
   const updateProfile = useUpdateProfileSettings();
-  const uploadAvatar = useUploadAvatar();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
+  const handlePhotoChange = async (url: string) => {
+    if (!profile?.id) return;
 
-  const handleSave = async () => {
-    if (!profile?.id || !selectedFile) return;
-    
     try {
-      const publicUrl = await uploadAvatar.mutateAsync(selectedFile);
       await updateProfile.mutateAsync({
         id: profile.id,
-        avatar_url: publicUrl,
+        avatar_url: url,
       });
       toast.success("Profile photo updated!");
-      onClose();
     } catch (error) {
       toast.error("Failed to update profile photo");
     }
   };
 
-  const currentImage = previewUrl || profile?.avatar_url;
-
   return (
-    <Modal open={open} onClose={onClose} title="Update Profile Photo">
-      <div style={{ textAlign: "center" }}>
-        {currentImage ? (
-          <img
-            src={currentImage}
-            alt="Profile"
-            style={{
-              width: "150px",
-              height: "150px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              margin: "0 auto 1rem",
-            }}
-          />
-        ) : (
-          <div style={{
-            width: "150px",
-            height: "150px",
-            borderRadius: "50%",
-            background: "var(--color-bg-secondary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 1rem",
-          }}>
-            <Upload size={40} style={{ color: "var(--color-text-muted)" }} />
+    <Modal open={open} onClose={onClose} title="Profile Identity" size="md" icon={<User size={20} />}>
+      <div className="admin-form-container">
+        <div className="form-group" style={{ textAlign: 'center' }}>
+          <label className="form-label-enhanced" style={{ justifyContent: 'center' }}>
+            <span className="form-label-icon">📸</span>
+            Profile Photo
+          </label>
+          <div style={{ maxWidth: '300px', margin: '0 auto' }}>
+            <ImageUpload
+              value={profile?.avatar_url || ""}
+              onChange={handlePhotoChange}
+              bucket="images"
+              folder="profile"
+              placeholder="Upload Profile Photo"
+            />
           </div>
-        )}
-        
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*"
-          style={{ display: "none" }}
-        />
-        
-        <button 
-          className="btn btn-secondary"
-          onClick={() => fileInputRef.current?.click()}
-          style={{ marginBottom: "1rem" }}
-        >
-          Choose File
-        </button>
-        
-        {selectedFile && (
-          <p style={{ color: "var(--color-text-muted)", fontSize: "0.875rem" }}>
-            {selectedFile.name}
+          <p className="text-muted text-xs" style={{ marginTop: '1rem' }}>
+            Your profile photo will be displayed in the hero section and footer.
           </p>
-        )}
-      </div>
+        </div>
 
-      <div className="modal-actions">
-        <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-        <button 
-          className="btn btn-primary" 
-          onClick={handleSave} 
-          disabled={!selectedFile || uploadAvatar.isPending || updateProfile.isPending}
-        >
-          {uploadAvatar.isPending || updateProfile.isPending ? "Uploading..." : "Save"}
-        </button>
+        <div className="form-actions-enhanced" style={{ borderTop: 'none', paddingTop: '1rem' }}>
+          <button className="btn btn-primary btn-glow" onClick={onClose} style={{ width: '100%' }}>
+            <CheckCircle size={16} /> Finish
+          </button>
+        </div>
       </div>
     </Modal>
   );

@@ -11,8 +11,9 @@ interface ExperienceManageDialogProps {
 
 const experienceTypes = [
   { value: "job", label: "Work Experience", icon: <Briefcase size={14} /> },
-  { value: "education", label: "Education", icon: <GraduationCap size={14} /> },
   { value: "internship", label: "Internship", icon: <Building size={14} /> },
+  { value: "freelance", label: "Freelance", icon: <Briefcase size={14} /> },
+  { value: "education", label: "Education", icon: <GraduationCap size={14} /> },
 ];
 
 export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialogProps) {
@@ -25,15 +26,15 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
   });
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({ 
-    title: "", 
-    company: "", 
-    location: "", 
-    period: "", 
-    description: "", 
-    technologies: "", 
-    experience_type: "job", 
-    is_current: false 
+  const [formData, setFormData] = useState({
+    title: "",
+    company: "",
+    location: "",
+    period: "",
+    description: "",
+    technologies: "",
+    experience_type: "job",
+    is_current: false
   });
 
   const resetForm = () => {
@@ -58,22 +59,29 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
   };
 
   const handleSave = async () => {
-    if (!formData.title || !formData.company || !formData.period) return;
+    if (!formData.title || !formData.company) return;
     setIsSaving(true);
-    const data = {
+
+    // Preparation of data for both add and update
+    const baseData = {
       title: formData.title,
       company: formData.company,
-      location: formData.location,
-      period: formData.period,
+      location: formData.location || null,
+      period: formData.period || "",
       description: formData.description.split("\n").filter(Boolean),
       technologies: formData.technologies.split(",").map(s => s.trim()).filter(Boolean),
       experience_type: formData.experience_type,
       is_current: formData.is_current,
-      display_order: experiences.length
     };
+
     try {
-      if (editingId) await updateExperience(editingId, data);
-      else await addExperience(data);
+      if (editingId) {
+        // For update, we don't necessarily want to change the display_order
+        await updateExperience(editingId, baseData);
+      } else {
+        // For new, we add to the end
+        await addExperience({ ...baseData, display_order: experiences.length });
+      }
       resetForm();
     } catch (error) {
       console.error(error);
@@ -111,153 +119,10 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
     <>
       <Modal open={open} onClose={onClose} title="Manage Experience" size="lg" icon={<Briefcase size={20} />}>
         {/* Add Button */}
-        {!showForm && (
-          <button className="btn-add-new" onClick={() => setShowForm(true)}>
-            <Plus size={18} />
-            <span>Add New Experience</span>
-          </button>
-        )}
-
-        {/* Form */}
-        {showForm && (
-          <div className="admin-form-card animate-scale-in">
-            <div className="admin-form-header">
-              <h4>{editingId ? "Edit Experience" : "Add New Experience"}</h4>
-              <button className="btn-icon-close" onClick={resetForm}>
-                <X size={16} />
-              </button>
-            </div>
-            
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon">💼</span>
-                  Job Title
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.title} 
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Software Engineer"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon">🏢</span>
-                  Company / Institution
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.company} 
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder="Google"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid-3">
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon"><Calendar size={14} /></span>
-                  Period
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.period} 
-                  onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-                  placeholder="Jan 2022 - Present"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon"><MapPin size={14} /></span>
-                  Location
-                </label>
-                <input 
-                  type="text" 
-                  className="form-input-enhanced" 
-                  value={formData.location} 
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="San Francisco, CA"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label-enhanced">
-                  <span className="form-label-icon">📑</span>
-                  Type
-                </label>
-                <select 
-                  className="form-select-enhanced" 
-                  value={formData.experience_type}
-                  onChange={(e) => setFormData({ ...formData, experience_type: e.target.value })}
-                >
-                  {experienceTypes.map((type) => (
-                    <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label-enhanced">
-                <span className="form-label-icon">📝</span>
-                Description (one per line)
-              </label>
-              <textarea 
-                className="form-textarea-enhanced" 
-                value={formData.description} 
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="• Led development of key features&#10;• Improved performance by 50%"
-                rows={4}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label-enhanced">
-                <span className="form-label-icon">🔧</span>
-                Technologies (comma-separated)
-              </label>
-              <input 
-                type="text" 
-                className="form-input-enhanced" 
-                value={formData.technologies} 
-                onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
-                placeholder="React, Node.js, PostgreSQL"
-              />
-            </div>
-
-            <div className="form-checkbox-enhanced">
-              <input 
-                type="checkbox" 
-                id="is_current" 
-                checked={formData.is_current}
-                onChange={(e) => setFormData({ ...formData, is_current: e.target.checked })}
-              />
-              <label htmlFor="is_current">
-                <CheckCircle size={14} />
-                Currently Working Here
-              </label>
-            </div>
-            
-            <div className="form-actions-enhanced">
-              <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
-              <button 
-                className="btn btn-primary btn-glow" 
-                onClick={handleSave}
-                disabled={!formData.title || !formData.company || !formData.period || isSaving}
-              >
-                {isSaving ? (
-                  <><span className="spinner-small" /> Saving...</>
-                ) : (
-                  <><CheckCircle size={16} /> {editingId ? "Update" : "Add"} Experience</>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
+        <button className="btn-add-new" onClick={() => setShowForm(true)}>
+          <Plus size={18} />
+          <span>Add New Experience</span>
+        </button>
 
         {/* Experience List */}
         <div className="admin-list-container">
@@ -275,8 +140,8 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
           ) : (
             <div className="experience-list-admin">
               {experiences.map((exp, index) => (
-                <div 
-                  key={exp.id} 
+                <div
+                  key={exp.id}
                   className="experience-card-admin animate-fade-in"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
@@ -293,22 +158,15 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
                       <span><Calendar size={12} /> {exp.period}</span>
                       {exp.location && <span><MapPin size={12} /> {exp.location}</span>}
                     </div>
-                    {exp.technologies && exp.technologies.length > 0 && (
-                      <div className="experience-card-tech">
-                        {exp.technologies.slice(0, 4).map((tech, i) => (
-                          <span key={i} className="tech-tag-mini">{tech}</span>
-                        ))}
-                      </div>
-                    )}
                   </div>
                   <div className="experience-card-actions">
-                    <button 
+                    <button
                       className="btn-action btn-action-edit"
                       onClick={() => handleEdit(exp)}
                     >
                       <Edit3 size={14} />
                     </button>
-                    <button 
+                    <button
                       className="btn-action btn-action-delete"
                       onClick={() => handleDeleteClick(exp)}
                     >
@@ -319,6 +177,157 @@ export function ExperienceManageDialog({ open, onClose }: ExperienceManageDialog
               ))}
             </div>
           )}
+        </div>
+      </Modal>
+
+      {/* Add/Edit Experience Modal (Advanced Level) */}
+      <Modal
+        open={showForm}
+        onClose={resetForm}
+        title={editingId ? "Edit Experience" : "Add New Experience"}
+        size="lg"
+        icon={editingId ? <Edit3 size={20} /> : <Plus size={20} />}
+      >
+        <div className="admin-form-container">
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon">💼</span>
+                Job Title
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="Software Engineer"
+                autoFocus
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon">🏢</span>
+                Company / Institution
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                placeholder="Google"
+              />
+            </div>
+          </div>
+
+          <div className="form-grid-3">
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon"><Calendar size={14} /></span>
+                Period
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.period}
+                onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+                placeholder="Jan 2022 - Present"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon"><MapPin size={14} /></span>
+                Location
+              </label>
+              <input
+                type="text"
+                className="form-input-enhanced"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="San Francisco, CA"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label-enhanced">
+                <span className="form-label-icon">📑</span>
+                Type
+              </label>
+              <select
+                className="form-select-enhanced"
+                value={formData.experience_type}
+                onChange={(e) => setFormData({ ...formData, experience_type: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  backgroundColor: 'var(--color-card)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-foreground)',
+                  outline: 'none'
+                }}
+              >
+                {experienceTypes.map((type) => (
+                  <option key={type.value} value={type.value}>{type.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label-enhanced">
+              <span className="form-label-icon">📝</span>
+              Description (one per line)
+            </label>
+            <textarea
+              className="form-textarea-enhanced"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="• Led development of key features&#10;• Improved performance by 50%"
+              rows={4}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label-enhanced">
+              <span className="form-label-icon">🔧</span>
+              Technologies (comma-separated)
+            </label>
+            <input
+              type="text"
+              className="form-input-enhanced"
+              value={formData.technologies}
+              onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
+              placeholder="React, Node.js, PostgreSQL"
+            />
+          </div>
+
+          <div className="form-checkbox-enhanced" style={{ margin: '1rem 0' }}>
+            <input
+              type="checkbox"
+              id="is_current"
+              checked={formData.is_current}
+              onChange={(e) => setFormData({ ...formData, is_current: e.target.checked })}
+              style={{ width: 'auto', marginRight: '0.5rem' }}
+            />
+            <label htmlFor="is_current" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+              <CheckCircle size={14} />
+              Currently Working Here
+            </label>
+          </div>
+
+          <div className="form-actions-enhanced" style={{ borderTop: 'none', paddingTop: '1.5rem' }}>
+            <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
+            <button
+              className="btn btn-primary btn-glow"
+              onClick={handleSave}
+              disabled={!formData.title || !formData.company || isSaving}
+            >
+              {isSaving ? (
+                <><span className="spinner-small" /> Saving...</>
+              ) : (
+                <><CheckCircle size={16} /> {editingId ? "Update" : "Add"} Experience</>
+              )}
+            </button>
+          </div>
         </div>
       </Modal>
 

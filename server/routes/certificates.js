@@ -27,14 +27,15 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { title, issuer, issue_date, credential_url, image_url, display_order } = req.body;
-        await db.query(
-            `UPDATE certificates SET title=?, issuer=?, issue_date=?, credential_url=?, image_url=?, display_order=? 
-            WHERE id=?`,
-            [title, issuer, issue_date, credential_url, image_url, display_order, req.params.id]
-        );
+        const updates = req.body;
+        const id = req.params.id;
+
+        await db.query('UPDATE certificates SET ? WHERE id = ?', [updates, id]);
+
+        console.log(`Certificate ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Certificate updated' });
     } catch (err) {
+        console.error('Update certificate error:', err);
         res.status(500).json({ error: err.message });
     }
 });
