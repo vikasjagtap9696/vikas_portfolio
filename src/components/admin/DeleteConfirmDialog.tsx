@@ -20,10 +20,11 @@ export function DeleteConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="modal-overlay-enhanced" onClick={onClose}>
+    <div className="modal-overlay-enhanced" onClick={onClose} style={{ cursor: 'auto' }}>
       <div 
         className="delete-confirm-dialog"
         onClick={(e) => e.stopPropagation()}
+        style={{ cursor: 'auto' }}
       >
         <div className="delete-confirm-icon">
           <AlertTriangle size={32} />
