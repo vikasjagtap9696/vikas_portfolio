@@ -57,10 +57,12 @@ export function Modal({ open, onClose, title, children, size = "md", icon }: Mod
     <div 
       className={`modal-overlay-enhanced ${isClosing ? 'closing' : ''}`} 
       onClick={handleClose}
+      style={{ cursor: 'auto' }}
     >
       <div 
         className={`modal-content-enhanced ${sizeClasses[size]} ${isClosing ? 'closing' : ''}`}
         onClick={(e) => e.stopPropagation()}
+        style={{ cursor: 'auto' }}
       >
         {/* Decorative elements */}
         <div className="modal-glow-orb modal-glow-orb-1" />

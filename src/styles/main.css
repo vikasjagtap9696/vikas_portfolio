@@ -4565,6 +4565,27 @@ body {
   z-index: 99999;
   padding: var(--spacing-4);
   animation: overlayFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: auto;
+}
+
+.modal-overlay-enhanced *,
+.modal-overlay-enhanced a,
+.modal-overlay-enhanced button,
+.modal-overlay-enhanced input,
+.modal-overlay-enhanced textarea,
+.modal-overlay-enhanced [role="button"] {
+  cursor: auto !important;
+}
+
+.modal-overlay-enhanced button,
+.modal-overlay-enhanced a,
+.modal-overlay-enhanced [role="button"] {
+  cursor: pointer !important;
+}
+
+.modal-overlay-enhanced input,
+.modal-overlay-enhanced textarea {
+  cursor: text !important;
 }
 
 .modal-overlay-enhanced.closing {
