@@ -15,6 +15,23 @@ export interface Experience {
   display_order: number;
 }
 
+// Map from DB format (type) to frontend format (experience_type)
+function mapFromApi(item: any): Experience {
+  return {
+    ...item,
+    experience_type: item.experience_type || item.type || "job",
+    description: typeof item.description === "string" ? JSON.parse(item.description) : (item.description || []),
+    technologies: typeof item.technologies === "string" ? JSON.parse(item.technologies) : (item.technologies || []),
+    is_current: Boolean(item.is_current),
+  };
+}
+
+// Map from frontend format to DB format (type instead of experience_type)
+function mapToApi(data: any) {
+  const { experience_type, ...rest } = data;
+  return { ...rest, type: experience_type || "job" };
+}
+
 export function useExperiences() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +39,8 @@ export function useExperiences() {
   const fetchExperiences = async () => {
     try {
       const response = await experienceApi.getAll();
-      setExperiences(response.data || []);
+      const raw = response.data || [];
+      setExperiences(raw.map(mapFromApi));
     } catch (error) {
       console.error("Error fetching experiences:", error);
     } finally {
@@ -36,11 +54,9 @@ export function useExperiences() {
 
   const addExperience = async (experience: Omit<Experience, "id">) => {
     try {
-      const response = await experienceApi.create(experience);
-      // Refetch to get the latest data including ID
+      await experienceApi.create(mapToApi(experience));
       await fetchExperiences();
       toast.success("Experience added successfully!");
-      return response.data;
     } catch (error: any) {
       toast.error(error.message || "Error adding experience");
       throw error;
@@ -49,7 +65,7 @@ export function useExperiences() {
 
   const updateExperience = async (id: string, updates: Partial<Experience>) => {
     try {
-      await experienceApi.update(id, updates);
+      await experienceApi.update(id, mapToApi(updates));
       await fetchExperiences();
       toast.success("Experience updated successfully!");
     } catch (error: any) {
