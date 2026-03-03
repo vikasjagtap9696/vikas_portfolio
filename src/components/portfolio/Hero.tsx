@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { useAuth } from "@/contexts/AuthContext";
 import { HeroTextDialog } from "@/components/admin/HeroTextDialog";
@@ -57,8 +58,8 @@ export function Hero() {
   return (
     <section id="home" className="hero">
       {/* Admin Edit Buttons */}
-      {user && (
-        <div style={{ position: "fixed", top: "5rem", right: "3.5rem", zIndex: 9999, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      {user && createPortal(
+        <div style={{ position: "fixed", top: "5rem", right: "3rem", zIndex: 9999, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <button className="section-edit-btn" onClick={() => setOpenDialog("heroText")}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -87,7 +88,8 @@ export function Hero() {
             </svg>
             Social
           </button>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Background Image */}
