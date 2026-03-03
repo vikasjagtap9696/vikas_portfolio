@@ -29,17 +29,17 @@ export function Projects() {
 
   // Skeleton loader component
   const SkeletonCard = () => (
-    <div className="project-card glass animate-pulse">
+    <div className="project-card glass">
       <div className="project-image-container">
-        <div className="skeleton-image" style={{ height: "200px", background: "hsl(var(--muted))", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0" }} />
+        <div className="skeleton" style={{ height: "100%", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0" }} />
       </div>
       <div className="project-content">
-        <div className="skeleton-text" style={{ height: "1.5rem", width: "70%", background: "hsl(var(--muted))", borderRadius: "var(--radius)", marginBottom: "0.75rem" }} />
-        <div className="skeleton-text" style={{ height: "1rem", width: "100%", background: "hsl(var(--muted))", borderRadius: "var(--radius)", marginBottom: "0.5rem" }} />
-        <div className="skeleton-text" style={{ height: "1rem", width: "80%", background: "hsl(var(--muted))", borderRadius: "var(--radius)", marginBottom: "1rem" }} />
+        <div className="skeleton" style={{ height: "1.5rem", width: "70%", marginBottom: "0.75rem" }} />
+        <div className="skeleton" style={{ height: "1rem", width: "100%", marginBottom: "0.5rem" }} />
+        <div className="skeleton" style={{ height: "1rem", width: "80%", marginBottom: "1rem" }} />
         <div style={{ display: "flex", gap: "0.5rem" }}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="skeleton-badge" style={{ height: "1.5rem", width: "4rem", background: "hsl(var(--muted))", borderRadius: "var(--radius-full)" }} />
+            <div key={i} className="skeleton" style={{ height: "1.5rem", width: "4rem", borderRadius: "var(--radius-full)" }} />
           ))}
         </div>
       </div>

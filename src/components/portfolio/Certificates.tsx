@@ -23,14 +23,14 @@ export function Certificates() {
 
   // Skeleton loader component
   const SkeletonCard = () => (
-    <div className="certificate-card glass animate-pulse">
+    <div className="certificate-card glass">
       <div className="certificate-image-container">
-        <div className="skeleton-image" style={{ height: "180px", background: "hsl(var(--muted))", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0" }} />
+        <div className="skeleton" style={{ height: "100%", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0" }} />
       </div>
       <div className="certificate-content">
-        <div className="skeleton-text" style={{ height: "1.25rem", width: "80%", background: "hsl(var(--muted))", borderRadius: "var(--radius)", marginBottom: "0.75rem" }} />
-        <div className="skeleton-text" style={{ height: "1rem", width: "60%", background: "hsl(var(--muted))", borderRadius: "var(--radius)", marginBottom: "0.5rem" }} />
-        <div className="skeleton-text" style={{ height: "0.875rem", width: "40%", background: "hsl(var(--muted))", borderRadius: "var(--radius)" }} />
+        <div className="skeleton" style={{ height: "1.25rem", width: "80%", marginBottom: "0.75rem" }} />
+        <div className="skeleton" style={{ height: "1rem", width: "60%", marginBottom: "0.5rem" }} />
+        <div className="skeleton" style={{ height: "0.875rem", width: "40%" }} />
       </div>
     </div>
   );
