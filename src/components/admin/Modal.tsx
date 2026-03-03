@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Sparkles } from "lucide-react";
 
 interface ModalProps {
@@ -52,7 +53,7 @@ export function Modal({ open, onClose, title, children, size = "md", icon }: Mod
     xl: "modal-xl",
   };
 
-  return (
+  return createPortal(
     <div 
       className={`modal-overlay-enhanced ${isClosing ? 'closing' : ''}`} 
       onClick={handleClose}
@@ -84,6 +85,7 @@ export function Modal({ open, onClose, title, children, size = "md", icon }: Mod
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
