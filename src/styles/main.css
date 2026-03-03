@@ -4782,6 +4782,8 @@ body {
 .modal-body-enhanced {
   padding: var(--spacing-6);
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
   position: relative;
   z-index: 1;
   background: var(--color-card);
