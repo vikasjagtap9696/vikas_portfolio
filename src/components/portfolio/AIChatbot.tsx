@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useProfileSettings } from "@/hooks/useProfileSettings";
 
 type Message = {
   role: "user" | "assistant";
@@ -8,16 +9,23 @@ type Message = {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-assistant`;
 
 export function AIChatbot() {
+  const { data: profileSettings } = useProfileSettings();
   const [isOpen, setIsOpen] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const name = profileSettings?.hero_name || "Vikas";
+  const nameParts = name.trim().split(/\s+/);
+  const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0] || "Vikas";
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm Vikas AI Assistant. I can help you understand what kind of project you need, suggest the right technologies, and connect you with Vikas for your development needs. How can I help you today?",
+      content: `Hi! I'm ${firstName}'s AI Assistant. I can help you understand what kind of project you need, suggest the right technologies, and connect you with ${firstName} for your development needs. How can I help you today?`,
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -108,7 +116,7 @@ export function AIChatbot() {
                 </svg>
               </div>
               <div>
-                <h3 className="chatbot-title">Vikas AI Assistant</h3>
+                <h3 className="chatbot-title">{firstName}'s Assistant</h3>
                 <span className="chatbot-status">
                   <span className="status-dot"></span>
                   Online
@@ -179,8 +187,8 @@ export function AIChatbot() {
               <button onClick={() => setInput("I need a website")}>
                 🌐 I need a website
               </button>
-              <button onClick={() => setInput("Tell me about Vikas")}>
-                👨‍💻 About Vikas
+              <button onClick={() => setInput(`Tell me about ${firstName}`)}>
+                👨‍💻 About {firstName}
               </button>
               <button onClick={() => setInput("What technologies do you work with?")}>
                 ⚡ Technologies

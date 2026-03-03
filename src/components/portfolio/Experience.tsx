@@ -5,8 +5,6 @@ import { ExperienceManageDialog } from "@/components/admin/ExperienceManageDialo
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ScrambleTitle } from "./ScrambleTitle";
 
-const fallbackExperiences: ExperienceType[] = [];
-
 const typeLabels: Record<string, string> = {
   job: "Job",
   internship: "Internship",
@@ -19,7 +17,8 @@ export function Experience() {
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
-  const experiences = dbExperiences.length > 0 ? dbExperiences : fallbackExperiences;
+
+  const experiences = dbExperiences || [];
 
   return (
     <section ref={sectionRef} id="experience" className={`section relative section-animate-left ${isVisible ? 'visible' : ''}`}>
@@ -37,15 +36,15 @@ export function Experience() {
       )}
 
       {/* Background decoration */}
-      <div 
-        className="bg-blob bg-blob-accent" 
+      <div
+        className="bg-blob bg-blob-accent"
         style={{ top: 0, right: 0, width: "24rem", height: "24rem" }}
       />
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <ScrambleTitle 
-            className="section-title" 
+          <ScrambleTitle
+            className="section-title"
             highlightText="Experience"
           >
             Work Experience

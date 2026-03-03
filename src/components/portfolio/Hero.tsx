@@ -28,15 +28,15 @@ export function Hero() {
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Fallback values
-  const name = profileSettings?.hero_name || (isLoading ? "" : "Vikas Jagtap");
+  // No fallback values - use dynamic data only
+  const name = profileSettings?.hero_name || "";
   const nameParts = name.trim().split(/\s+/);
   const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0] || "";
   const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
 
-  const greeting = profileSettings?.hero_title || (isLoading ? "" : "Hello, I'm");
-  const subtitle = profileSettings?.hero_subtitle || (isLoading ? "" : "Full Stack Developer & UI/UX Designer");
-  const heroBio = profileSettings?.hero_bio || (isLoading ? "" : "Passionate developer crafting beautiful, responsive web applications with modern technologies. Turning ideas into elegant digital experiences.");
+  const greeting = profileSettings?.hero_title || "";
+  const subtitle = profileSettings?.hero_subtitle || "";
+  const heroBio = profileSettings?.hero_bio || "";
 
   const { displayedText: typedGreeting, isComplete: greetingComplete } = useTypingAnimation({
     text: greeting,
@@ -254,25 +254,25 @@ export function Hero() {
             {/* Stats Grid */}
             <div className="stats-grid">
               <StatCounter
-                value={profileSettings?.stat_years_experience || (isLoading ? "" : "3+")}
+                value={profileSettings?.stat_years_experience || ""}
                 label="Years Experience"
                 detail=""
                 delay={100}
               />
               <StatCounter
-                value={profileSettings?.stat_projects_completed || (isLoading ? "" : "50+")}
+                value={profileSettings?.stat_projects_completed || ""}
                 label="Projects Completed"
                 detail=""
                 delay={200}
               />
               <StatCounter
-                value={profileSettings?.stat_technologies || (isLoading ? "" : "15+")}
+                value={profileSettings?.stat_technologies || ""}
                 label="Technologies"
                 detail=""
                 delay={300}
               />
               <StatCounter
-                value={profileSettings?.stat_client_satisfaction || (isLoading ? "" : "100%")}
+                value={profileSettings?.stat_client_satisfaction || ""}
                 label="Client Satisfaction"
                 detail=""
                 delay={400}

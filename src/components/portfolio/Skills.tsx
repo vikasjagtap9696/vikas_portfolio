@@ -12,8 +12,6 @@ const categoryConfig: Record<string, { color: "primary" | "accent" }> = {
   "Tools & Others": { color: "accent" }
 };
 
-const fallbackSkills: Skill[] = [];
-
 const CategoryIcon = ({ category }: { category: string }) => {
   switch (category) {
     case "Frontend":
@@ -54,8 +52,9 @@ export function Skills() {
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
   const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+
   const isVisible = true; // Force true for debugging "not seen" issue
-  const skills = dbSkills.length > 0 ? dbSkills : fallbackSkills;
+  const skills = dbSkills || [];
 
   // Group skills by category
   const skillsByCategory = skills.reduce((acc, skill) => {

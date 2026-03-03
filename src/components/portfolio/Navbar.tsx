@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -15,8 +16,13 @@ const navItems = [
 
 export function Navbar() {
   const { user } = useAuth();
+  const { data: profileSettings } = useProfileSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const initials = profileSettings?.hero_name
+    ? profileSettings.hero_name.split(" ").map(n => n[0]).join("").substring(0, 2)
+    : "VJ";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,9 +38,9 @@ export function Navbar() {
     if (element) {
       // Add transition class to body
       document.body.classList.add("section-transitioning");
-      
+
       element.scrollIntoView({ behavior: "smooth" });
-      
+
       // Remove transition class after animation
       setTimeout(() => {
         document.body.classList.remove("section-transitioning");
@@ -53,7 +59,7 @@ export function Navbar() {
           }}
           className="navbar-logo gradient-text"
         >
-          VJ
+          {initials}
         </a>
 
         {/* Desktop Navigation */}
@@ -135,8 +141,8 @@ export function Navbar() {
               Hire Me
             </button>
             {!user && (
-              <Link 
-                to="/auth" 
+              <Link
+                to="/auth"
                 className="navbar-link"
                 style={{ padding: "0.5rem 0", textAlign: "center" }}
                 onClick={() => setIsOpen(false)}
