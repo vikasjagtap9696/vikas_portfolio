@@ -53,7 +53,8 @@ export function Skills() {
   const { skills: dbSkills } = useSkills();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
-  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+  const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+  const isVisible = true; // Force true for debugging "not seen" issue
   const skills = dbSkills.length > 0 ? dbSkills : fallbackSkills;
 
   // Group skills by category
@@ -79,19 +80,19 @@ export function Skills() {
       )}
 
       {/* Background decoration */}
-      <div 
-        className="bg-blob bg-blob-primary" 
+      <div
+        className="bg-blob bg-blob-primary"
         style={{ top: "50%", left: 0, width: "18rem", height: "18rem", transform: "translateY(-50%)" }}
       />
-      <div 
-        className="bg-blob bg-blob-accent" 
+      <div
+        className="bg-blob bg-blob-accent"
         style={{ top: "50%", right: 0, width: "18rem", height: "18rem", transform: "translateY(-50%)" }}
       />
 
       <div className="container relative z-10">
         <div className="text-center" style={{ marginBottom: "4rem" }}>
-          <ScrambleTitle 
-            className="section-title" 
+          <ScrambleTitle
+            className="section-title"
             highlightText="Skills"
           >
             My Skills
@@ -104,7 +105,7 @@ export function Skills() {
         <div className={`skills-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
           {Object.entries(skillsByCategory).map(([category, categorySkills], index) => {
             const config = categoryConfig[category] || { color: "primary" };
-            
+
             return (
               <div
                 key={category}
@@ -126,8 +127,8 @@ export function Skills() {
                         <span className="skill-percent">{skill.proficiency}%</span>
                       </div>
                       <div className="progress-container">
-                        <div 
-                          className="progress-bar" 
+                        <div
+                          className="progress-bar"
                           style={{ width: `${skill.proficiency}%` }}
                         />
                       </div>

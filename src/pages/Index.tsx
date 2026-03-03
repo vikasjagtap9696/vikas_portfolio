@@ -28,10 +28,10 @@ const Index = () => {
     <>
       <SkipToContent />
       {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
-      <div 
+      <div
         className={`page-content ${!isLoading ? "loaded" : ""}`}
-        style={{ 
-          minHeight: "100vh", 
+        style={{
+          minHeight: "100vh",
           background: "var(--color-background)",
           opacity: isLoading ? 0 : 1,
           transition: "opacity 0.5s ease 0.3s",
@@ -45,41 +45,27 @@ const Index = () => {
         <Navbar />
         <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
           <Hero />
-          <ScrollReveal animation="fade-up">
-            <ParallaxSection variant="circles">
-              <About />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up" delay={100}>
-            <ParallaxSection variant="blobs">
-              <Skills />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up">
-            <ParallaxSection variant="dots">
-              <Projects />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up" delay={100}>
-            <ParallaxSection variant="gradient">
-              <Experience />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up">
-            <ParallaxSection variant="circles">
-              <Certificates />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up" delay={100}>
-            <ParallaxSection variant="blobs">
-              <Resume />
-            </ParallaxSection>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up">
-            <ParallaxSection variant="gradient">
-              <Contact />
-            </ParallaxSection>
-          </ScrollReveal>
+          <ParallaxSection variant="circles">
+            <About />
+          </ParallaxSection>
+          <ParallaxSection variant="blobs">
+            <Skills />
+          </ParallaxSection>
+          <ParallaxSection variant="dots">
+            <Projects />
+          </ParallaxSection>
+          <ParallaxSection variant="gradient">
+            <Experience />
+          </ParallaxSection>
+          <ParallaxSection variant="circles">
+            <Certificates />
+          </ParallaxSection>
+          <ParallaxSection variant="blobs">
+            <Resume />
+          </ParallaxSection>
+          <ParallaxSection variant="gradient">
+            <Contact />
+          </ParallaxSection>
         </main>
         <Footer />
         <AIChatbot />
