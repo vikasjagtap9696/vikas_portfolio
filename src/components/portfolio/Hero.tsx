@@ -59,7 +59,7 @@ export function Hero() {
     <section id="home" className="hero">
       {/* Admin Edit Buttons */}
       {user && createPortal(
-        <div style={{ position: "fixed", top: "5rem", right: "3rem", zIndex: 9999, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        <div style={{ position: "absolute", top: "10rem", right: "3rem", zIndex: 9999, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <button className="section-edit-btn" onClick={() => setOpenDialog("heroText")}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
