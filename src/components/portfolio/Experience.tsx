@@ -54,6 +54,46 @@ export function Experience() {
           </p>
         </div>
 
+        {experiences.length === 0 ? (
+          <div className="empty-state glass" style={{
+            textAlign: "center",
+            padding: "4rem 2rem",
+            borderRadius: "var(--radius-xl)",
+            maxWidth: "500px",
+            margin: "0 auto"
+          }}>
+            <div className="empty-state-icon" style={{
+              width: "80px",
+              height: "80px",
+              margin: "0 auto 1.5rem",
+              background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2))",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "0.5rem", color: "hsl(var(--foreground))" }}>
+              No Experience Yet
+            </h3>
+            <p style={{ color: "hsl(var(--muted-foreground))", marginBottom: "1.5rem" }}>
+              {user ? "Add your first experience to showcase your journey." : "Experience will appear here once added."}
+            </p>
+            {user && (
+              <button className="btn btn-primary" onClick={() => setShowDialog(true)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: "0.5rem" }}>
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Experience
+              </button>
+            )}
+          </div>
+        ) : (
         <div className={`timeline stagger-alternate ${isVisible ? 'visible' : ''}`}>
           <div className="timeline-line" />
 
@@ -158,6 +198,7 @@ export function Experience() {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       {/* Dialog */}
