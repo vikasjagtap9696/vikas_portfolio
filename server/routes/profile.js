@@ -12,67 +12,35 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Update profile (upsert mostly)
+// Update profile (partial update support)
 router.put('/', async (req, res) => {
     try {
-        const {
-            hero_title, hero_subtitle, hero_name, hero_bio,
-            about_intro, about_description, avatar_url,
-            github_url, linkedin_url, twitter_url, email, footer_copyright,
-            about_education_primary, about_education_secondary, career_goals,
-            hero_background_url, about_image_url,
-            stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-            footer_tagline, footer_location,
-            what_i_do
-        } = req.body;
+        const updates = req.body;
 
-        // Check if exists
+        // Remove id from updates if it's there, as we don't want to update the PK
+        delete updates.id;
+
         const [existing] = await db.query('SELECT id FROM profile_settings LIMIT 1');
 
-        if (existing.length > 0) {
-            await db.query(
-                `UPDATE profile_settings SET 
-                 hero_title=?, hero_subtitle=?, hero_name=?, hero_bio=?, 
-                 about_intro=?, about_description=?, avatar_url=?, 
-                 github_url=?, linkedin_url=?, twitter_url=?, email=?, footer_copyright=?,
-                 about_education_primary=?, about_education_secondary=?, career_goals=?,
-                 hero_background_url=?, about_image_url=?,
-                 stat_years_experience=?, stat_projects_completed=?, stat_technologies=?, stat_client_satisfaction=?,
-                 footer_tagline=?, footer_location=?,
-                 what_i_do=?
-                 WHERE id=?`,
-                [hero_title, hero_subtitle, hero_name, hero_bio,
-                    about_intro, about_description, avatar_url,
-                    github_url, linkedin_url, twitter_url, email, footer_copyright,
-                    about_education_primary, about_education_secondary, JSON.stringify(career_goals || []),
-                    hero_background_url, about_image_url,
-                    stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-                    footer_tagline, footer_location,
-                    JSON.stringify(what_i_do || []),
-                    existing[0].id]
-            );
-        } else {
-            await db.query(
-                `INSERT INTO profile_settings 
-                (hero_title, hero_subtitle, hero_name, hero_bio, 
-                 about_intro, about_description, avatar_url, 
-                 github_url, linkedin_url, twitter_url, email, footer_copyright,
-                 about_education_primary, about_education_secondary, career_goals,
-                 hero_background_url, about_image_url,
-                 stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-                 footer_tagline, footer_location, what_i_do) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [hero_title, hero_subtitle, hero_name, hero_bio,
-                    about_intro, about_description, avatar_url,
-                    github_url, linkedin_url, twitter_url, email, footer_copyright,
-                    about_education_primary, about_education_secondary, JSON.stringify(career_goals || []),
-                    hero_background_url, about_image_url,
-                    stat_years_experience, stat_projects_completed, stat_technologies, stat_client_satisfaction,
-                    footer_tagline, footer_location, JSON.stringify(what_i_do || [])]
-            );
+        if (existing.length === 0) {
+            // If no profile exists, create one with whatever data we have
+            const [result] = await db.query('INSERT INTO profile_settings SET ?', [updates]);
+            return res.json({ message: 'Profile created', id: result.insertId });
         }
+
+        const id = existing[0].id;
+
+        // Handle JSON fields
+        if (updates.career_goals) updates.career_goals = JSON.stringify(updates.career_goals);
+        if (updates.what_i_do) updates.what_i_do = JSON.stringify(updates.what_i_do);
+
+        // Perform partial update
+        await db.query('UPDATE profile_settings SET ? WHERE id = ?', [updates, id]);
+
+        console.log(`Profile ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Profile updated' });
     } catch (err) {
+        console.error('Update profile error:', err);
         res.status(500).json({ error: err.message });
     }
 });
