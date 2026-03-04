@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -8,13 +8,12 @@ const jwt = require('jsonwebtoken');
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        const user = await User.findOne({ where: { email } });
 
-        if (users.length === 0) {
+        if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const user = users[0];
         const validPassword = await bcrypt.compare(password, user.password_hash);
 
         if (!validPassword) {

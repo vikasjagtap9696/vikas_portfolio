@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { Certificate } = require('../models');
 
 router.get('/', async (req, res) => {
     try {
-        const [certs] = await db.query('SELECT * FROM certificates ORDER BY display_order ASC');
+        const certs = await Certificate.findAll({ order: [['display_order', 'ASC']] });
         res.json(certs);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -14,11 +14,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { title, issuer, issue_date, credential_url, image_url, display_order } = req.body;
-        await db.query(
-            `INSERT INTO certificates (title, issuer, issue_date, credential_url, image_url, display_order) 
-            VALUES (?, ?, ?, ?, ?, ?)`,
-            [title, issuer, issue_date, credential_url, image_url, display_order]
-        );
+        await Certificate.create({ title, issuer, issue_date, credential_url, image_url, display_order });
         res.status(201).json({ message: 'Certificate added' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -30,7 +26,7 @@ router.put('/:id', async (req, res) => {
         const updates = req.body;
         const id = req.params.id;
 
-        await db.query('UPDATE certificates SET ? WHERE id = ?', [updates, id]);
+        await Certificate.update(updates, { where: { id } });
 
         console.log(`Certificate ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Certificate updated' });
@@ -42,7 +38,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        await db.query('DELETE FROM certificates WHERE id=?', [req.params.id]);
+        await Certificate.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Certificate deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { ContactSubmission } = require('../models');
 
 // Submit contact form
 router.post('/', async (req, res) => {
     try {
         const { name, email, subject, message } = req.body;
-        const [result] = await db.query(
-            'INSERT INTO contact_submissions (name, email, subject, message) VALUES (?, ?, ?, ?)',
-            [name, email, subject, message]
-        );
-        res.status(201).json({ message: 'Message sent successfully', id: result.insertId });
+        const submission = await ContactSubmission.create({ name, email, subject, message });
+        res.status(201).json({ message: 'Message sent successfully', id: submission.id });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -19,7 +16,7 @@ router.post('/', async (req, res) => {
 // Get submissions (admin only usually)
 router.get('/', async (req, res) => {
     try {
-        const [messages] = await db.query('SELECT * FROM contact_submissions ORDER BY created_at DESC');
+        const messages = await ContactSubmission.findAll({ order: [['created_at', 'DESC']] });
         res.json(messages);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -29,7 +26,7 @@ router.get('/', async (req, res) => {
 // Mark as read or delete
 router.delete('/:id', async (req, res) => {
     try {
-        await db.query('DELETE FROM contact_submissions WHERE id = ?', [req.params.id]);
+        await ContactSubmission.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Message deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });

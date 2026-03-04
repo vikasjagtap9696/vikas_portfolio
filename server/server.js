@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
+const { sequelize } = require('./models');
 require('dotenv').config();
 
 const app = express();
@@ -49,6 +49,11 @@ app.use('/api/chat', chatRoutes);
 // make sure to serve uploads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+sequelize.sync().then(() => {
+    console.log('Database synced successfully with Sequelize.');
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}).catch(err => {
+    console.error('Failed to sync database:', err);
 });

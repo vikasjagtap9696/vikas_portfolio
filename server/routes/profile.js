@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { ProfileSetting } = require('../models');
 
 // Get profile settings
 router.get('/', async (req, res) => {
     try {
-        const [profiles] = await db.query('SELECT * FROM profile_settings LIMIT 1');
-        res.json(profiles[0] || {});
+        const profile = await ProfileSetting.findOne();
+        res.json(profile || {});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -17,27 +17,21 @@ router.put('/', async (req, res) => {
     try {
         const updates = req.body;
 
-        // Remove id from updates if it's there, as we don't want to update the PK
+        // Remove id from updates if it's there
         delete updates.id;
 
-        const [existing] = await db.query('SELECT id FROM profile_settings LIMIT 1');
+        const profile = await ProfileSetting.findOne();
 
-        if (existing.length === 0) {
+        if (!profile) {
             // If no profile exists, create one with whatever data we have
-            const [result] = await db.query('INSERT INTO profile_settings SET ?', [updates]);
-            return res.json({ message: 'Profile created', id: result.insertId });
+            const newProfile = await ProfileSetting.create(updates);
+            return res.json({ message: 'Profile created', id: newProfile.id });
         }
 
-        const id = existing[0].id;
-
-        // Handle JSON fields
-        if (updates.career_goals) updates.career_goals = JSON.stringify(updates.career_goals);
-        if (updates.what_i_do) updates.what_i_do = JSON.stringify(updates.what_i_do);
-
         // Perform partial update
-        await db.query('UPDATE profile_settings SET ? WHERE id = ?', [updates, id]);
+        await profile.update(updates);
 
-        console.log(`Profile ${id} updated with fields:`, Object.keys(updates).join(', '));
+        console.log(`Profile ${profile.id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Profile updated' });
     } catch (err) {
         console.error('Update profile error:', err);

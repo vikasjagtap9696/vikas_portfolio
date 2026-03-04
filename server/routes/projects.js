@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { Project } = require('../models');
 
 // Get all projects
 router.get('/', async (req, res) => {
     try {
-        const [projects] = await db.query('SELECT * FROM projects ORDER BY display_order ASC');
+        const projects = await Project.findAll({ order: [['display_order', 'ASC']] });
         res.json(projects);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -17,15 +17,10 @@ router.post('/', async (req, res) => {
     // Add auth middleware here if needed
     try {
         const { title, description, image_url, live_url, github_url, tech_stack, featured, display_order } = req.body;
-        // tech_stack is expected to be an array, MySQL JSON column handles it if passed as JSON string or structure depending on driver
-        // mysql2 handles automatic serialization if it is an object/array usually? Let's stringify to be safe for JSON column
-        const techStackJson = JSON.stringify(tech_stack || []);
-
-        const [result] = await db.query(
-            'INSERT INTO projects (title, description, image_url, live_url, github_url, tech_stack, featured, display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [title, description, image_url, live_url, github_url, techStackJson, featured || false, display_order || 0]
-        );
-        res.status(201).json({ id: result.insertId, ...req.body });
+        const project = await Project.create({
+            title, description, image_url, live_url, github_url, tech_stack: tech_stack || [], featured: featured || false, display_order: display_order || 0
+        });
+        res.status(201).json(project);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -37,11 +32,7 @@ router.put('/:id', async (req, res) => {
         const updates = req.body;
         const id = req.params.id;
 
-        if (updates.tech_stack && Array.isArray(updates.tech_stack)) {
-            updates.tech_stack = JSON.stringify(updates.tech_stack);
-        }
-
-        await db.query('UPDATE projects SET ? WHERE id = ?', [updates, id]);
+        await Project.update(updates, { where: { id } });
 
         console.log(`Project ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Project updated' });
@@ -54,7 +45,7 @@ router.put('/:id', async (req, res) => {
 // Delete project
 router.delete('/:id', async (req, res) => {
     try {
-        await db.query('DELETE FROM projects WHERE id = ?', [req.params.id]);
+        await Project.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Project deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });

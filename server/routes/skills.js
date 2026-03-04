@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const { Skill } = require('../models');
 
 // Get all skills
 router.get('/', async (req, res) => {
     try {
-        const [skills] = await db.query('SELECT * FROM skills ORDER BY display_order ASC');
+        const skills = await Skill.findAll({ order: [['display_order', 'ASC']] });
         res.json(skills);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -16,11 +16,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { name, proficiency, category, icon, display_order } = req.body;
-        const [result] = await db.query(
-            'INSERT INTO skills (name, proficiency, category, icon, display_order) VALUES (?, ?, ?, ?, ?)',
-            [name, proficiency, category, icon, display_order || 0]
-        );
-        res.status(201).json({ id: result.insertId, ...req.body });
+        const skill = await Skill.create({
+            name, proficiency, category, icon, display_order: display_order || 0
+        });
+        res.status(201).json(skill);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -32,7 +31,7 @@ router.put('/:id', async (req, res) => {
         const updates = req.body;
         const id = req.params.id;
 
-        await db.query('UPDATE skills SET ? WHERE id = ?', [updates, id]);
+        await Skill.update(updates, { where: { id } });
 
         console.log(`Skill ${id} updated with fields:`, Object.keys(updates).join(', '));
         res.json({ message: 'Skill updated' });
@@ -45,7 +44,7 @@ router.put('/:id', async (req, res) => {
 // Delete skill
 router.delete('/:id', async (req, res) => {
     try {
-        await db.query('DELETE FROM skills WHERE id = ?', [req.params.id]);
+        await Skill.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Skill deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });
