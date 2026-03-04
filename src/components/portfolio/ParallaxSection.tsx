@@ -8,9 +8,15 @@ interface ParallaxSectionProps {
 }
 
 export function ParallaxSection({ children, className = "", variant = "circles" }: ParallaxSectionProps) {
-  const parallax1 = useParallax({ speed: 0.1, direction: "both" });
-  const parallax2 = useParallax({ speed: 0.15, direction: "both", reverse: true });
-  const parallax3 = useParallax({ speed: 0.08, direction: "vertical" });
+  const isMobile = typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches;
+
+  const p1 = useParallax({ speed: 0.1, direction: "both" });
+  const p2 = useParallax({ speed: 0.15, direction: "both", reverse: true });
+  const p3 = useParallax({ speed: 0.08, direction: "vertical" });
+
+  const parallax1 = isMobile ? { x: 0, y: 0 } : p1;
+  const parallax2 = isMobile ? { x: 0, y: 0 } : p2;
+  const parallax3 = isMobile ? { x: 0, y: 0 } : p3;
 
   const renderBackground = () => {
     switch (variant) {

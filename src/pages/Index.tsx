@@ -11,13 +11,11 @@ import { Contact } from "@/components/portfolio/Contact";
 import { Footer } from "@/components/portfolio/Footer";
 import { AIChatbot } from "@/components/portfolio/AIChatbot";
 import { AdminToolbar } from "@/components/admin/AdminToolbar";
-import { CursorTrail } from "@/components/portfolio/CursorTrail";
-import CustomCursor from "@/components/portfolio/CustomCursor";
+import { LoadingScreen } from "@/components/portfolio/LoadingScreen";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
 import { ParallaxSection } from "@/components/portfolio/ParallaxSection";
-import { LoadingScreen } from "@/components/portfolio/LoadingScreen";
 import SkipToContent from "@/components/portfolio/SkipToContent";
 import ScrollReveal from "@/components/portfolio/ScrollReveal";
 
@@ -40,8 +38,6 @@ const Index = () => {
         <ScrollProgress />
         <SectionIndicator />
         <ScrollToTop />
-        <CursorTrail />
-        <CustomCursor />
         <Navbar />
         <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
           <Hero />

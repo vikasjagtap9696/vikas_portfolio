@@ -7,8 +7,6 @@ import { HeroStatsDialog } from "@/components/admin/HeroStatsDialog";
 import { ProfilePhotoDialog } from "@/components/admin/ProfilePhotoDialog";
 import { SocialLinksDialog } from "@/components/admin/SocialLinksDialog";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
-import { useParallax } from "@/hooks/useParallax";
-import { ParticleBackground } from "./ParticleBackground";
 import { WaveTransition } from "./WaveTransition";
 import { StatCounter } from "./StatCounter";
 import { MagneticButton } from "./MagneticButton";
@@ -18,10 +16,6 @@ export function Hero() {
   const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState<string | null>(null);
   const [showSubtitle, setShowSubtitle] = useState(false);
-
-  // Parallax effects for background blobs
-  const parallaxSlow = useParallax({ speed: 0.15, reverse: false });
-  const parallaxFast = useParallax({ speed: 0.25, reverse: true });
 
   const handleScroll = (href: string) => {
     const element = document.querySelector(href);
@@ -111,9 +105,6 @@ export function Hero() {
           <div className="hero-overlay" />
         </div>
       )}
-
-      {/* Particle Animation */}
-      <ParticleBackground />
 
       <div className="container relative z-10">
         <div className="hero-content">
