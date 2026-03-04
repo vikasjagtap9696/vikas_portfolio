@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { sequelize } = require('./models');
+const { sequelize, User } = require('./models');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
@@ -49,8 +50,34 @@ app.use('/api/chat', chatRoutes);
 // make sure to serve uploads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
     console.log('Database synced successfully with Sequelize.');
+
+    // Ensure Admin User Exists for Production (Railway)
+    try {
+        const adminEmail = 'vikasjagtap.9996@gmail.com';
+        const hashedPassword = await bcrypt.hash('@Vikas123', 10);
+
+        const [user, created] = await User.findOrCreate({
+            where: { email: adminEmail },
+            defaults: {
+                password_hash: hashedPassword,
+                role: 'admin'
+            }
+        });
+
+        if (!created) {
+            // Update password if user already exists to match requested credentials
+            user.password_hash = hashedPassword;
+            await user.save();
+            console.log('Admin user credentials updated.');
+        } else {
+            console.log('Admin user created successfully.');
+        }
+    } catch (adminErr) {
+        console.error('Error ensuring admin user:', adminErr);
+    }
+
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
