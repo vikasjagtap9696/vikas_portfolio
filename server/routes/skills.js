@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Skill } = require('../models');
+const authenticateToken = require('../middleware/auth');
 
 // Get all skills
 router.get('/', async (req, res) => {
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create skill
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     try {
         const { name, proficiency, category, icon, display_order } = req.body;
         const skill = await Skill.create({
@@ -26,7 +27,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update skill
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const updates = req.body;
         const id = req.params.id;
@@ -42,7 +43,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete skill
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
     try {
         await Skill.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Skill deleted' });

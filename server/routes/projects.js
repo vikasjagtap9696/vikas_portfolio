@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Project } = require('../models');
+const authenticateToken = require('../middleware/auth');
 
 // Get all projects
 router.get('/', async (req, res) => {
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create project
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
     // Add auth middleware here if needed
     try {
         const { title, description, image_url, live_url, github_url, tech_stack, featured, display_order } = req.body;
@@ -27,7 +28,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update project
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const updates = req.body;
         const id = req.params.id;
@@ -43,7 +44,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete project
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
     try {
         await Project.destroy({ where: { id: req.params.id } });
         res.json({ message: 'Project deleted' });
