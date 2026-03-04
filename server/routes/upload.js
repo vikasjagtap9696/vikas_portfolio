@@ -38,8 +38,10 @@ router.post('/', (req, res, next) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
     // Return the URL to access the file
-    // Assuming server is running on localhost:5000
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    console.log('File uploaded, URL:', fileUrl);
     res.json({ url: fileUrl });
 });
 

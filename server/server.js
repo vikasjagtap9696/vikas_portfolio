@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const { sequelize, User } = require('./models');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -45,7 +47,6 @@ const uploadRoutes = require('./routes/upload');
 const notificationRoutes = require('./routes/notifications');
 const resumeRoutes = require('./routes/resume');
 const chatRoutes = require('./routes/chat');
-const path = require('path');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -61,7 +62,12 @@ app.use('/api/resume', resumeRoutes);
 app.use('/api/chat', chatRoutes);
 
 // make sure to serve uploads folder
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+    console.log('Created uploads directory:', uploadsPath);
+}
+app.use('/uploads', express.static(uploadsPath));
 
 sequelize.sync({ alter: true }).then(async () => {
     console.log('Database synced successfully with Sequelize (Alter: true).');
