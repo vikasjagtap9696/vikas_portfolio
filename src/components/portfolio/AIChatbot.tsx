@@ -50,7 +50,8 @@ export function AIChatbot() {
 
     try {
       // Use local API instead of Supabase Edge Function
-      const response = await fetch('http://localhost:5000/api/chat', { // Assuming port 5000
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://vikasjagtap.up.railway.app/api';
+      const response = await fetch(`${apiUrl}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
