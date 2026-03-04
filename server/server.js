@@ -63,8 +63,8 @@ app.use('/api/chat', chatRoutes);
 // make sure to serve uploads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-sequelize.sync().then(async () => {
-    console.log('Database synced successfully with Sequelize.');
+sequelize.sync({ alter: true }).then(async () => {
+    console.log('Database synced successfully with Sequelize (Alter: true).');
 
     // Ensure Admin User Exists for Production (Railway)
     try {
