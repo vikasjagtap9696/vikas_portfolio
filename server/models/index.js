@@ -74,7 +74,19 @@ const ProfileSetting = sequelize.define('ProfileSetting', {
     linkedin_url: DataTypes.STRING,
     twitter_url: DataTypes.STRING,
     email: DataTypes.STRING,
-    footer_copyright: DataTypes.STRING
+    footer_copyright: DataTypes.STRING,
+    about_education_primary: DataTypes.STRING,
+    about_education_secondary: DataTypes.STRING,
+    career_goals: DataTypes.JSON,
+    hero_background_url: DataTypes.STRING,
+    about_image_url: DataTypes.STRING,
+    stat_years_experience: DataTypes.STRING,
+    stat_projects_completed: DataTypes.STRING,
+    stat_technologies: DataTypes.STRING,
+    stat_client_satisfaction: DataTypes.STRING,
+    footer_tagline: DataTypes.STRING,
+    footer_location: DataTypes.STRING,
+    what_i_do: DataTypes.JSON
 }, { tableName: 'profile_settings', timestamps: true, createdAt: 'created_at', updatedAt: 'updated_at' });
 
 const Certificate = sequelize.define('Certificate', {
