@@ -28,11 +28,8 @@ export function HeroTextDialog({ open, onClose }: HeroTextDialogProps) {
   }, [profile]);
 
   const handleSave = async () => {
-    if (!profile?.id) return;
-
     try {
       await updateProfile.mutateAsync({
-        id: profile.id,
         hero_name: name,
         hero_title: title,
         hero_subtitle: subtitle,

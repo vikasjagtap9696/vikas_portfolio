@@ -11,7 +11,7 @@ interface SocialLinksDialogProps {
 export function SocialLinksDialog({ open, onClose }: SocialLinksDialogProps) {
   const { data: profile } = useProfileSettings();
   const updateProfile = useUpdateProfileSettings();
-  
+
   const [githubUrl, setGithubUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [twitterUrl, setTwitterUrl] = useState("");
@@ -27,11 +27,8 @@ export function SocialLinksDialog({ open, onClose }: SocialLinksDialogProps) {
   }, [profile]);
 
   const handleSave = async () => {
-    if (!profile?.id) return;
-    
     try {
       await updateProfile.mutateAsync({
-        id: profile.id,
         github_url: githubUrl,
         linkedin_url: linkedinUrl,
         twitter_url: twitterUrl,

@@ -28,11 +28,8 @@ export function HeroStatsDialog({ open, onClose }: HeroStatsDialogProps) {
   }, [profile]);
 
   const handleSave = async () => {
-    if (!profile?.id) return;
-
     try {
       await updateProfile.mutateAsync({
-        id: profile.id,
         stat_years_experience: yearsExperience,
         stat_projects_completed: projectsCompleted,
         stat_technologies: technologies,

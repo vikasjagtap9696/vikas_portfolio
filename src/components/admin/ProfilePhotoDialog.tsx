@@ -14,11 +14,8 @@ export function ProfilePhotoDialog({ open, onClose }: ProfilePhotoDialogProps) {
   const updateProfile = useUpdateProfileSettings();
 
   const handlePhotoChange = async (url: string) => {
-    if (!profile?.id) return;
-
     try {
       await updateProfile.mutateAsync({
-        id: profile.id,
         avatar_url: url,
       });
       toast.success("Profile photo updated!");

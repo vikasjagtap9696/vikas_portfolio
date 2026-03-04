@@ -53,7 +53,7 @@ export function useUpdateProfileSettings() {
 
   return useMutation({
     mutationFn: async (updates: {
-      id: string;
+      id?: string;
       avatar_url?: string | null;
       hero_background_url?: string | null;
       github_url?: string | null;
