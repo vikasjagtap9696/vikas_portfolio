@@ -18,12 +18,16 @@ import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
 import { ParallaxSection } from "@/components/portfolio/ParallaxSection";
 import SkipToContent from "@/components/portfolio/SkipToContent";
 import ScrollReveal from "@/components/portfolio/ScrollReveal";
+import CustomCursor from "@/components/portfolio/CustomCursor";
+import { CursorTrail } from "@/components/portfolio/CursorTrail";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
     <>
+      <CustomCursor />
+      <CursorTrail />
       <SkipToContent />
       {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
       <div
