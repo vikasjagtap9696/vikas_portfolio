@@ -25,22 +25,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for token
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      const loginTime = localStorage.getItem('loginTime');
 
-    if (token && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setIsAdmin(parsedUser.role === 'admin');
-      } catch (e) {
-        console.error("Error parsing user from storage", e);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      let cleanup: (() => void) | undefined;
+
+      if (token && storedUser && loginTime) {
+        const now = Date.now();
+        const elapsed = now - parseInt(loginTime);
+        const oneHour = 60 * 60 * 1000;
+
+        if (elapsed >= oneHour) {
+          signOut();
+        } else {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+            setIsAdmin(parsedUser.role === 'admin');
+
+            const remainingTime = oneHour - elapsed;
+            const timer = setTimeout(() => {
+              signOut();
+            }, remainingTime);
+
+            cleanup = () => clearTimeout(timer);
+          } catch (e) {
+            console.error("Error parsing user from storage", e);
+            signOut();
+          }
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+      return cleanup;
+    };
+
+    const timerCleanup = checkAuth();
+    return () => {
+      if (typeof timerCleanup === 'function') timerCleanup();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -48,11 +72,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await authApi.login({ email, password });
       const { token, user } = response.data;
 
+      const loginTime = Date.now().toString();
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('loginTime', loginTime);
 
       setUser(user);
       setIsAdmin(user.role === 'admin');
+
+      // Auto logout after 1 hour
+      setTimeout(() => {
+        signOut();
+      }, 60 * 60 * 1000);
 
       return { error: null };
     } catch (error: any) {
@@ -72,6 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('loginTime');
     setUser(null);
     setIsAdmin(false);
   };
