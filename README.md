@@ -1,73 +1,95 @@
-# Welcome to your Lovable project
+🚀 Vikas Dev Portfolio
 
-## Project info
+Welcome to my personal developer portfolio! This project showcases my skills, projects, and journey as a Computer Science student and aspiring Full Stack Developer.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+👋 About Me
 
-## How can I edit this code?
+Hi, I'm Vikas Jagtap.
 
-There are several ways of editing your application.
+I'm a passionate B.Sc. Computer Science student from India with a strong interest in Web Development, Java, DevOps, Cloud Computing, and Open Source. I enjoy building modern, responsive, and user-friendly web applications while continuously improving my technical skills.
 
-**Use Lovable**
+💻 Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Frontend
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
+- Vite
 - Tailwind CSS
+- HTML5
+- CSS3
+- JavaScript
 
-## How can I deploy this project?
+Backend
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- Java
+- PHP
+- PostgreSQL
+- MySQL
 
-## Can I connect a custom domain to my Lovable project?
+Tools
 
-Yes, you can!
+- Git
+- GitHub
+- VS Code
+- Linux
+- Docker (Learning)
+- AWS (Learning)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+✨ Features
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Modern UI/UX
+- Fully Responsive Design
+- Fast Performance
+- Project Showcase
+- Skills Section
+- Contact Information
+- Clean and Reusable Code
+
+📂 Getting Started
+
+Clone the repository:
+
+git clone https://github.com/vikasjagtap9696/vikas-dev-portfolio.git
+
+Install dependencies:
+
+npm install
+
+Run the development server:
+
+npm run dev
+
+Build for production:
+
+npm run build
+
+📁 Project Structure
+
+src/
+components/
+pages/
+public/
+assets/
+
+🎯 Future Improvements
+
+- Dark/Light Theme Toggle
+- Blog Section
+- Project Filtering
+- Download Resume
+- Multi-language Support
+
+📬 Connect With Me
+
+- GitHub: https://github.com/vikasjagtap9696
+- LinkedIn: Add your LinkedIn profile
+- Email: Add your email address
+
+⭐ Support
+
+If you found this project helpful, please consider giving it a ⭐ on GitHub.
+
+---
+
+Made with ❤️ by Vikas Jagtap
