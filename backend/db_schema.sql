@@ -97,7 +97,38 @@ CREATE TABLE IF NOT EXISTS certificates (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert Default Admin User (password: 'admin123')
-INSERT INTO users (email, password_hash, role) 
-VALUES ('admin@example.com', '$2b$10$YourHashedPasswordHere', 'admin')
-ON DUPLICATE KEY UPDATE email=email;
+-- Default admin user
+-- Email: vikasjagtap.9996@gmail.com
+-- Password: @Vikas123
+-- The password is stored as a bcrypt hash, never as plain text.
+INSERT INTO users (email, password_hash, role)
+VALUES (
+    'vikasjagtap.9996@gmail.com',
+    '$2b$10$unQBaG0jC3Qm7CdZ3K5L7.BefGb9Y98lNKcwL76RIoOB6ffeMS78m',
+    'admin'
+)
+ON DUPLICATE KEY UPDATE role = 'admin';
+
+-- Starter portfolio data. These inserts are safe to run more than once.
+INSERT INTO profile_settings (hero_title, hero_subtitle, hero_name, hero_bio, email)
+SELECT 'Full Stack Developer', 'Building useful digital experiences', 'Vikas Jagtap',
+       'B.Sc. Computer Science student and aspiring full stack developer.',
+       'vikasjagtap.9996@gmail.com'
+WHERE NOT EXISTS (SELECT 1 FROM profile_settings);
+
+INSERT INTO skills (name, proficiency, category, display_order)
+SELECT 'React', 85, 'Frontend', 1
+WHERE NOT EXISTS (SELECT 1 FROM skills WHERE name = 'React');
+
+INSERT INTO skills (name, proficiency, category, display_order)
+SELECT 'Node.js', 80, 'Backend', 2
+WHERE NOT EXISTS (SELECT 1 FROM skills WHERE name = 'Node.js');
+
+INSERT INTO skills (name, proficiency, category, display_order)
+SELECT 'MySQL', 75, 'Database', 3
+WHERE NOT EXISTS (SELECT 1 FROM skills WHERE name = 'MySQL');
+
+INSERT INTO projects (title, description, tech_stack, featured, display_order)
+SELECT 'Developer Portfolio', 'A production-ready personal portfolio website.',
+       JSON_ARRAY('React', 'TypeScript', 'Node.js', 'MySQL'), TRUE, 1
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE title = 'Developer Portfolio');

@@ -1,95 +1,33 @@
-🚀 Vikas Dev Portfolio
+## Vikas Dev Portfolio
 
-Welcome to my personal developer portfolio! This project showcases my skills, projects, and journey as a Computer Science student and aspiring Full Stack Developer.
+This repository contains a React/Vite frontend and an Express/Sequelize backend.
 
-👋 About Me
+### Structure
 
-Hi, I'm Vikas Jagtap.
+- `frontend/`: React, Vite, TypeScript, styles, and public assets
+- `backend/`: Express API, Sequelize models, routes, and uploads
+- `.env`: shared local and deployment environment variables
 
-I'm a passionate B.Sc. Computer Science student from India with a strong interest in Web Development, Java, DevOps, Cloud Computing, and Open Source. I enjoy building modern, responsive, and user-friendly web applications while continuously improving my technical skills.
+### Development
 
-💻 Tech Stack
+Install dependencies from the repository root:
 
-Frontend
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- HTML5
-- CSS3
-- JavaScript
-
-Backend
-
-- Java
-- PHP
-- PostgreSQL
-- MySQL
-
-Tools
-
-- Git
-- GitHub
-- VS Code
-- Linux
-- Docker (Learning)
-- AWS (Learning)
-
-✨ Features
-
-- Modern UI/UX
-- Fully Responsive Design
-- Fast Performance
-- Project Showcase
-- Skills Section
-- Contact Information
-- Clean and Reusable Code
-
-📂 Getting Started
-
-Clone the repository:
-
-git clone https://github.com/vikasjagtap9696/vikas-dev-portfolio.git
-
-Install dependencies:
-
+```bash
 npm install
+```
 
-Run the development server:
+Run the applications in separate terminals:
 
-npm run dev
+```bash
+npm run dev:frontend
+npm run dev:backend
+```
 
-Build for production:
+Build and validate the frontend:
 
+```bash
 npm run build
+npm run lint
+```
 
-📁 Project Structure
-
-src/
-components/
-pages/
-public/
-assets/
-
-🎯 Future Improvements
-
-- Dark/Light Theme Toggle
-- Blog Section
-- Project Filtering
-- Download Resume
-- Multi-language Support
-
-📬 Connect With Me
-
-- GitHub: https://github.com/vikasjagtap9696
-- LinkedIn: Add your LinkedIn profile
-- Email: Add your email address
-
-⭐ Support
-
-If you found this project helpful, please consider giving it a ⭐ on GitHub.
-
----
-
-Made with ❤️ by Vikas Jagtap
+Set database values and a strong `JWT_SECRET` in the root `.env` before deploying. Never commit `.env`.

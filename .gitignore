@@ -11,6 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+frontend/dist
+backend/uploads/*
+!backend/uploads/.gitkeep
+*.tsbuildinfo
+.env
+!.env.example
 
 # Editor directories and files
 .vscode/*

@@ -4,7 +4,7 @@ const { sequelize, User } = require('./models');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,10 +25,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-
-// Multer for file uploads (basic setup)
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 // Test route
 app.get('/', (req, res) => {

@@ -17,7 +17,6 @@ import { SectionIndicator } from "@/components/portfolio/SectionIndicator";
 import { ScrollToTop } from "@/components/portfolio/ScrollToTop";
 import { ParallaxSection } from "@/components/portfolio/ParallaxSection";
 import SkipToContent from "@/components/portfolio/SkipToContent";
-import ScrollReveal from "@/components/portfolio/ScrollReveal";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
