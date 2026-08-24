@@ -30,4 +30,4 @@ npm run build
 npm run lint
 ```
 
-Set database values and a strong `JWT_SECRET` in the root `.env` before deploying. Never commit `.env`.
+Set database values, a strong `JWT_SECRET`, `ADMIN_EMAIL`, and a strong `ADMIN_PASSWORD` in the root `.env` before deploying. Never commit `.env`.

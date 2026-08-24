@@ -6,6 +6,10 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET must be configured before starting the server.');
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -70,8 +74,14 @@ sequelize.sync({ alter: true }).then(async () => {
 
     // Ensure Admin User Exists for Production (Railway)
     try {
-        const adminEmail = 'vikasjagtap.9996@gmail.com';
-        const hashedPassword = await bcrypt.hash('@Vikas123', 10);
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
+        if (!adminEmail || !adminPassword) {
+            throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be configured.');
+        }
+
+        const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
         const [user, created] = await User.findOrCreate({
             where: { email: adminEmail },
