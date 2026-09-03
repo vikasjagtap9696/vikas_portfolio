@@ -2,17 +2,26 @@ const { Sequelize, DataTypes } = require('sequelize');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const sequelize = new Sequelize(
-    process.env.MYSQLDATABASE || process.env.DB_NAME || 'vikas_portfolio',
-    process.env.MYSQLUSER || process.env.DB_USER || 'root',
-    process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'root',
-    {
-        host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
-        port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
-        dialect: 'mysql',
-        logging: false, // set to console.log to see queries
-    }
-);
+const databaseUrl = process.env.DATABASE_URL;
+const sequelize = databaseUrl
+    ? new Sequelize(databaseUrl, {
+        dialect: 'postgres',
+        dialectOptions: databaseUrl.includes('sslmode=require')
+            ? { ssl: { require: true, rejectUnauthorized: false } }
+            : {},
+        logging: false,
+    })
+    : new Sequelize(
+        process.env.DB_NAME || 'vikas_portfolio',
+        process.env.DB_USER || 'postgres',
+        process.env.DB_PASSWORD || 'postgres',
+        {
+            host: process.env.DB_HOST || 'localhost',
+            port: Number(process.env.DB_PORT || 5432),
+            dialect: 'postgres',
+            logging: false,
+        }
+    );
 
 const User = sequelize.define('User', {
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
@@ -26,7 +35,7 @@ const Project = sequelize.define('Project', {
     image_url: DataTypes.STRING,
     live_url: DataTypes.STRING,
     github_url: DataTypes.STRING,
-    tech_stack: DataTypes.JSON,
+    tech_stack: DataTypes.JSONB,
     featured: { type: DataTypes.BOOLEAN, defaultValue: false },
     display_order: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, { tableName: 'projects', timestamps: true, createdAt: 'created_at', updatedAt: 'updated_at' });
@@ -55,8 +64,8 @@ const Experience = sequelize.define('Experience', {
     title: { type: DataTypes.STRING, allowNull: false },
     location: DataTypes.STRING,
     period: DataTypes.STRING,
-    description: DataTypes.JSON,
-    technologies: DataTypes.JSON,
+    description: DataTypes.JSONB,
+    technologies: DataTypes.JSONB,
     is_current: { type: DataTypes.BOOLEAN, defaultValue: false },
     type: DataTypes.STRING,
     display_order: { type: DataTypes.INTEGER, defaultValue: 0 }
@@ -78,7 +87,7 @@ const ProfileSetting = sequelize.define('ProfileSetting', {
     footer_copyright: DataTypes.STRING,
     about_education_primary: DataTypes.STRING,
     about_education_secondary: DataTypes.STRING,
-    career_goals: DataTypes.JSON,
+    career_goals: DataTypes.JSONB,
     hero_background_url: DataTypes.STRING,
     about_image_url: DataTypes.STRING,
     stat_years_experience: DataTypes.STRING,
@@ -87,7 +96,7 @@ const ProfileSetting = sequelize.define('ProfileSetting', {
     stat_client_satisfaction: DataTypes.STRING,
     footer_tagline: DataTypes.STRING,
     footer_location: DataTypes.STRING,
-    what_i_do: DataTypes.JSON
+    what_i_do: DataTypes.JSONB
 }, { tableName: 'profile_settings', timestamps: true, createdAt: 'created_at', updatedAt: 'updated_at' });
 
 const Certificate = sequelize.define('Certificate', {
