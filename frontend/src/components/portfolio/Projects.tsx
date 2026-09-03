@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useProjects } from "@/hooks/useProjects";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProjectsManageDialog } from "@/components/admin/ProjectsManageDialog";
@@ -11,8 +11,29 @@ export function Projects() {
   const { user } = useAuth();
   const { data: profileSettings } = useProfileSettings();
   const [showDialog, setShowDialog] = useState(false);
+  const [projectViewMode, setProjectViewMode] = useState<"list" | "carousel">("list");
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const projectsGridRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
   const isVisible = true; // Force true for debugging "not seen" issue
+
+  useEffect(() => {
+    if (projectViewMode !== "carousel" || isCarouselPaused || projects.length < 2) return;
+
+    const interval = window.setInterval(() => {
+      const grid = projectsGridRef.current;
+      if (!grid) return;
+
+      const nextPosition = grid.scrollLeft + grid.clientWidth;
+      if (nextPosition >= grid.scrollWidth - 8) {
+        grid.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        grid.scrollBy({ left: grid.clientWidth, behavior: "smooth" });
+      }
+    }, 3500);
+
+    return () => window.clearInterval(interval);
+  }, [isCarouselPaused, projectViewMode, projects.length]);
 
   // Ensure tech_stack is an array
   const getTechStack = (tech: any): string[] => {
@@ -113,6 +134,22 @@ export function Projects() {
           <p className="section-subtitle">
             A showcase of my recent work and personal projects
           </p>
+          <div className="project-view-toggle" role="group" aria-label="Project display mode">
+            <button
+              type="button"
+              className={projectViewMode === "list" ? "active" : ""}
+              onClick={() => setProjectViewMode("list")}
+            >
+              List
+            </button>
+            <button
+              type="button"
+              className={projectViewMode === "carousel" ? "active" : ""}
+              onClick={() => setProjectViewMode("carousel")}
+            >
+              Carousel
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -141,8 +178,13 @@ export function Projects() {
             )}
           </div>
         ) : (
-          <div className={`projects-grid stagger-wave visible`}>
-            {featuredProjects.map((project, index) => (
+          <div
+            ref={projectsGridRef}
+            className={`projects-grid ${projectViewMode === "carousel" ? "projects-grid-carousel" : ""} stagger-wave visible`}
+            onMouseEnter={() => setIsCarouselPaused(true)}
+            onMouseLeave={() => setIsCarouselPaused(false)}
+          >
+            {(projectViewMode === "carousel" ? projects : featuredProjects).map((project, index) => (
               <div
                 key={project.id}
                 className="project-card glass hover-glow animate-fade-in"

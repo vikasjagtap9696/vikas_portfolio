@@ -2029,7 +2029,16 @@ h4 {
 @media (min-width: 1024px) {
   .about-grid {
     grid-template-columns: repeat(2, 1fr);
-    align-items: center;
+    align-items: stretch;
+  }
+
+  .about-grid > .flex {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-card {
+    height: 100%;
   }
 }
 
@@ -2060,6 +2069,14 @@ h4 {
 .about-card-content {
   color: var(--color-muted-foreground);
   line-height: 1.7;
+}
+
+.about-education-meta {
+  margin-top: 0.25rem;
+}
+
+.education-form-grid .form-input-enhanced {
+  margin-top: var(--spacing-2);
 }
 
 .about-list {
@@ -2163,15 +2180,20 @@ h4 {
 .skill-info {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: var(--spacing-3);
   margin-bottom: var(--spacing-1);
 }
 
 .skill-name {
+  min-width: 0;
   font-size: 0.875rem;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .skill-percent {
+  flex: 0 0 auto;
   font-size: 0.875rem;
   color: var(--color-muted-foreground);
 }
@@ -2185,10 +2207,13 @@ h4 {
 }
 
 .tech-tag {
+  max-width: 100%;
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 500;
+  overflow-wrap: anywhere;
+  text-align: center;
   transition: transform var(--transition-fast);
 }
 
@@ -2204,9 +2229,52 @@ h4 {
   gap: var(--spacing-8);
 }
 
+.project-view-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-top: var(--spacing-6);
+  padding: 0.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-card);
+}
+
+.project-view-toggle button {
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  color: var(--color-muted-foreground);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.project-view-toggle button.active,
+.project-view-toggle button:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.projects-grid-carousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 0.25rem 0.25rem 1rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-secondary);
+}
+
+.projects-grid-carousel .project-card {
+  flex: 0 0 min(100%, 22rem);
+  scroll-snap-align: start;
+}
+
 @media (min-width: 1024px) {
   .projects-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .projects-grid-carousel .project-card {
+    flex-basis: calc((100% - 4rem) / 3);
   }
 }
 

@@ -17,13 +17,36 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
   const [description, setDescription] = useState("");
   const [educationPrimary, setEducationPrimary] = useState("");
   const [educationSecondary, setEducationSecondary] = useState("");
+  const [primaryCollege, setPrimaryCollege] = useState("");
+  const [primaryCgpa, setPrimaryCgpa] = useState("");
+  const [primaryStart, setPrimaryStart] = useState("");
+  const [primaryEnd, setPrimaryEnd] = useState("");
+  const [secondaryCollege, setSecondaryCollege] = useState("");
+  const [secondaryCgpa, setSecondaryCgpa] = useState("");
+  const [secondaryStart, setSecondaryStart] = useState("");
+  const [secondaryEnd, setSecondaryEnd] = useState("");
+
+  const parseEducation = (value: string) => {
+    const [degree = "", college = "", cgpa = "", start = "", end = ""] = value.split("|").map((part) => part.trim());
+    return { degree, college, cgpa, start, end };
+  };
 
   useEffect(() => {
     if (profile) {
       setIntro(profile.about_intro || "");
       setDescription(profile.about_description || "");
-      setEducationPrimary(profile.about_education_primary || "");
-      setEducationSecondary(profile.about_education_secondary || "");
+      const primary = parseEducation(profile.about_education_primary || "");
+      const secondary = parseEducation(profile.about_education_secondary || "");
+      setEducationPrimary(primary.degree);
+      setEducationSecondary(secondary.degree);
+      setPrimaryCollege(primary.college);
+      setPrimaryCgpa(primary.cgpa);
+      setPrimaryStart(primary.start);
+      setPrimaryEnd(primary.end);
+      setSecondaryCollege(secondary.college);
+      setSecondaryCgpa(secondary.cgpa);
+      setSecondaryStart(secondary.start);
+      setSecondaryEnd(secondary.end);
     }
   }, [profile]);
 
@@ -35,8 +58,16 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
         id: profile.id,
         about_intro: intro,
         about_description: description,
-        about_education_primary: educationPrimary,
-        about_education_secondary: educationSecondary,
+        about_education_primary: educationPrimary.trim(),
+        about_education_secondary: educationSecondary.trim(),
+        about_education_primary_college: primaryCollege.trim(),
+        about_education_primary_cgpa: primaryCgpa.trim(),
+        about_education_primary_start: primaryStart.trim(),
+        about_education_primary_end: primaryEnd.trim(),
+        about_education_secondary_college: secondaryCollege.trim(),
+        about_education_secondary_cgpa: secondaryCgpa.trim(),
+        about_education_secondary_start: secondaryStart.trim(),
+        about_education_secondary_end: secondaryEnd.trim(),
       });
       toast.success("About text updated!");
       onClose();
@@ -77,7 +108,7 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
           />
         </div>
 
-        <div className="form-grid-2">
+        <div className="form-grid-2 education-form-grid">
           <div className="form-group">
             <label className="form-label-enhanced">
               <span className="form-label-icon"><GraduationCap size={14} /></span>
@@ -88,8 +119,14 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
               className="form-input-enhanced"
               value={educationPrimary}
               onChange={(e) => setEducationPrimary(e.target.value)}
-              placeholder="e.g. B.Tech in IT"
+              placeholder="Degree, e.g. B.Tech in IT"
             />
+            <input type="text" className="form-input-enhanced" value={primaryCollege} onChange={(e) => setPrimaryCollege(e.target.value)} placeholder="College / University" />
+            <input type="text" className="form-input-enhanced" value={primaryCgpa} onChange={(e) => setPrimaryCgpa(e.target.value)} placeholder="CGPA / Grade" />
+            <div className="form-grid-2">
+              <input type="text" className="form-input-enhanced" value={primaryStart} onChange={(e) => setPrimaryStart(e.target.value)} placeholder="Starting year" />
+              <input type="text" className="form-input-enhanced" value={primaryEnd} onChange={(e) => setPrimaryEnd(e.target.value)} placeholder="Ending year" />
+            </div>
           </div>
           <div className="form-group">
             <label className="form-label-enhanced">
@@ -101,8 +138,14 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
               className="form-input-enhanced"
               value={educationSecondary}
               onChange={(e) => setEducationSecondary(e.target.value)}
-              placeholder="e.g. Web Development Certification"
+              placeholder="Degree / Certification"
             />
+            <input type="text" className="form-input-enhanced" value={secondaryCollege} onChange={(e) => setSecondaryCollege(e.target.value)} placeholder="College / Institute" />
+            <input type="text" className="form-input-enhanced" value={secondaryCgpa} onChange={(e) => setSecondaryCgpa(e.target.value)} placeholder="CGPA / Grade" />
+            <div className="form-grid-2">
+              <input type="text" className="form-input-enhanced" value={secondaryStart} onChange={(e) => setSecondaryStart(e.target.value)} placeholder="Starting year" />
+              <input type="text" className="form-input-enhanced" value={secondaryEnd} onChange={(e) => setSecondaryEnd(e.target.value)} placeholder="Ending year" />
+            </div>
           </div>
         </div>
 

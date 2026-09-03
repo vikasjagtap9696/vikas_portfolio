@@ -17,13 +17,31 @@ export function About() {
   const careerGoals = profileSettings?.career_goals || [];
   const whatIDo = profileSettings?.what_i_do || [];
 
-  const parseEducation = (edu: string) => {
-    const [title, details] = edu.split("|").map(s => s.trim());
-    return { title, details };
+  const parseEducation = (edu: string, college: string | null | undefined, cgpa: string | null | undefined, start: string | null | undefined, end: string | null | undefined) => {
+    const [title = "", legacyCollege = "", legacyCgpa = "", legacyStart = "", legacyEnd = ""] = edu.split("|").map(s => s.trim());
+    return {
+      title,
+      college: college || legacyCollege,
+      cgpa: cgpa || legacyCgpa,
+      start: start || legacyStart,
+      end: end || legacyEnd,
+    };
   };
 
-  const primaryEdu = parseEducation(profileSettings?.about_education_primary || "");
-  const secondaryEdu = parseEducation(profileSettings?.about_education_secondary || "");
+  const primaryEdu = parseEducation(
+    profileSettings?.about_education_primary || "",
+    profileSettings?.about_education_primary_college,
+    profileSettings?.about_education_primary_cgpa,
+    profileSettings?.about_education_primary_start,
+    profileSettings?.about_education_primary_end,
+  );
+  const secondaryEdu = parseEducation(
+    profileSettings?.about_education_secondary || "",
+    profileSettings?.about_education_secondary_college,
+    profileSettings?.about_education_secondary_cgpa,
+    profileSettings?.about_education_secondary_start,
+    profileSettings?.about_education_secondary_end,
+  );
 
   return (
     <section ref={sectionRef} id="about" className={`section section-animate-rotate ${isVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
@@ -109,11 +127,23 @@ export function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="font-medium">{primaryEdu.title}</p>
-                  {primaryEdu.details && <p className="text-muted text-sm">{primaryEdu.details}</p>}
+                  {primaryEdu.college && <p className="text-muted text-sm">{primaryEdu.college}</p>}
+                  {(primaryEdu.cgpa || primaryEdu.start || primaryEdu.end) && (
+                    <p className="text-muted text-sm about-education-meta">
+                      {primaryEdu.cgpa && `CGPA: ${primaryEdu.cgpa}`}
+                      {(primaryEdu.start || primaryEdu.end) && ` | ${primaryEdu.start || ""} - ${primaryEdu.end || "Present"}`}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <p className="font-medium">{secondaryEdu.title}</p>
-                  {secondaryEdu.details && <p className="text-muted text-sm">{secondaryEdu.details}</p>}
+                  {secondaryEdu.college && <p className="text-muted text-sm">{secondaryEdu.college}</p>}
+                  {(secondaryEdu.cgpa || secondaryEdu.start || secondaryEdu.end) && (
+                    <p className="text-muted text-sm about-education-meta">
+                      {secondaryEdu.cgpa && `CGPA: ${secondaryEdu.cgpa}`}
+                      {(secondaryEdu.start || secondaryEdu.end) && ` | ${secondaryEdu.start || ""} - ${secondaryEdu.end || "Present"}`}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
