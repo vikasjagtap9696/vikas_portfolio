@@ -11,7 +11,7 @@ export function Projects() {
   const { user } = useAuth();
   const { data: profileSettings } = useProfileSettings();
   const [showDialog, setShowDialog] = useState(false);
-  const [projectViewMode, setProjectViewMode] = useState<"list" | "carousel">("list");
+  const [projectViewMode, setProjectViewMode] = useState<"list" | "carousel">("carousel");
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const projectsGridRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
@@ -184,7 +184,7 @@ export function Projects() {
             onMouseEnter={() => setIsCarouselPaused(true)}
             onMouseLeave={() => setIsCarouselPaused(false)}
           >
-            {(projectViewMode === "carousel" ? projects : featuredProjects).map((project, index) => (
+            {featuredProjects.map((project, index) => (
               <div
                 key={project.id}
                 className="project-card glass hover-glow animate-fade-in"

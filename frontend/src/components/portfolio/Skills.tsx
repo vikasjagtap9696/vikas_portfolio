@@ -184,7 +184,7 @@ export function Skills() {
 
         {/* Tech Stack Tags */}
         <div style={{ marginTop: "4rem" }}>
-          <p className="text-center text-muted" style={{ marginBottom: "2rem" }}>Technologies I work with</p>
+          <p className="tech-stack-label text-center" style={{ marginBottom: "2rem" }}>Technologies I work with</p>
           <div className="tech-tags">
             {skills.slice(0, 10).map((skill) => (
               <div key={skill.id} className="tech-tag glass hover-scale">

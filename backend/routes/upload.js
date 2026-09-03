@@ -1,48 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { v2: cloudinary } = require('cloudinary');
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        // Use a consistent name or unique name depending on use case
-        // adhering to request parmaeter 'type' if available or just unique timestamp
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 },
+});
 
-// Serve static files from uploads directory (needs to be added to server.js too)
-// In server.js: app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Just confirming it is 'file'. Should be fine as is.
-router.post('/', (req, res, next) => {
-    // Check if the 'file' is present in request
-    // Multer handles it, but let's be safe
-    next();
-}, upload.single('file'), (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    // Return the URL to access the file
-    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-    const host = req.get('host');
-    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
-    console.log('File uploaded, URL:', fileUrl);
-    res.json({ url: fileUrl });
+
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        return res.status(503).json({ error: 'Cloudinary storage is not configured' });
+    }
+
+    try {
+        const result = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                { folder: 'vikas-portfolio' },
+                (error, uploadResult) => error ? reject(error) : resolve(uploadResult)
+            );
+            stream.end(req.file.buffer);
+        });
+
+        console.log('File uploaded to Cloudinary:', result.secure_url);
+        res.json({ url: result.secure_url });
+    } catch (error) {
+        console.error('Cloudinary upload error:', error);
+        res.status(500).json({ error: 'Image upload failed' });
+    }
 });
 
 module.exports = router;

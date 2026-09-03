@@ -2029,16 +2029,17 @@ h4 {
 @media (min-width: 1024px) {
   .about-grid {
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(24rem, auto);
     align-items: stretch;
   }
 
   .about-grid > .flex {
-    display: grid;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    display: contents;
   }
 
-  .about-card {
+  .about-grid .about-card {
     height: 100%;
+    min-height: 0;
   }
 }
 
@@ -2075,13 +2076,64 @@ h4 {
   margin-top: 0.25rem;
 }
 
+.about-education-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.about-education-entry {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: rgba(6, 182, 212, 0.08);
+}
+
 .about-education-detail {
   color: var(--color-foreground);
   opacity: 0.78;
 }
 
+.about-education-detail strong {
+  color: var(--color-foreground);
+  opacity: 1;
+}
+
+.about-education-separator {
+  margin-left: var(--spacing-3);
+}
+
 .education-form-grid .form-input-enhanced {
   margin-top: var(--spacing-2);
+}
+
+.education-entry {
+  padding: var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.education-entry-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-foreground);
+  font-size: 1rem;
+}
+
+.education-field-label {
+  display: block;
+  margin-top: var(--spacing-3);
+  color: var(--color-muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.education-date-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-3);
 }
 
 .about-list {
@@ -2211,12 +2263,22 @@ h4 {
   margin-top: var(--spacing-16);
 }
 
+.tech-stack-label {
+  color: var(--color-foreground);
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 1;
+}
+
 .tech-tag {
   max-width: 100%;
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 500;
+  color: var(--color-foreground);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   overflow-wrap: anywhere;
   text-align: center;
   transition: transform var(--transition-fast);

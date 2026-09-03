@@ -124,24 +124,24 @@ export function About() {
                 </div>
                 <h3 className="about-card-title">Education</h3>
               </div>
-              <div className="flex flex-col gap-3">
-                <div>
+              <div className="about-education-list">
+                <div className="about-education-entry">
                   <p className="font-medium">{primaryEdu.title}</p>
-                  {primaryEdu.college && <p className="about-education-detail text-sm">{primaryEdu.college}</p>}
+                  {primaryEdu.college && <p className="about-education-detail text-sm"><strong>College:</strong> {primaryEdu.college}</p>}
                   {(primaryEdu.cgpa || primaryEdu.start || primaryEdu.end) && (
                     <p className="about-education-detail text-sm about-education-meta">
-                      {primaryEdu.cgpa && `CGPA: ${primaryEdu.cgpa}`}
-                      {(primaryEdu.start || primaryEdu.end) && ` | ${primaryEdu.start || ""} - ${primaryEdu.end || "Present"}`}
+                      {primaryEdu.cgpa && <><strong>CGPA:</strong> {primaryEdu.cgpa}</>}
+                      {(primaryEdu.start || primaryEdu.end) && <><strong className="about-education-separator">Duration:</strong> {primaryEdu.start || ""} - {primaryEdu.end || "Present"}</>}
                     </p>
                   )}
                 </div>
-                <div>
+                <div className="about-education-entry">
                   <p className="font-medium">{secondaryEdu.title}</p>
-                  {secondaryEdu.college && <p className="about-education-detail text-sm">{secondaryEdu.college}</p>}
+                  {secondaryEdu.college && <p className="about-education-detail text-sm"><strong>College:</strong> {secondaryEdu.college}</p>}
                   {(secondaryEdu.cgpa || secondaryEdu.start || secondaryEdu.end) && (
                     <p className="about-education-detail text-sm about-education-meta">
-                      {secondaryEdu.cgpa && `CGPA: ${secondaryEdu.cgpa}`}
-                      {(secondaryEdu.start || secondaryEdu.end) && ` | ${secondaryEdu.start || ""} - ${secondaryEdu.end || "Present"}`}
+                      {secondaryEdu.cgpa && <><strong>CGPA:</strong> {secondaryEdu.cgpa}</>}
+                      {(secondaryEdu.start || secondaryEdu.end) && <><strong className="about-education-separator">Duration:</strong> {secondaryEdu.start || ""} - {secondaryEdu.end || "Present"}</>}
                     </p>
                   )}
                 </div>

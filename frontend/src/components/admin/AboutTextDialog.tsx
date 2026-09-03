@@ -26,17 +26,41 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
   const [secondaryStart, setSecondaryStart] = useState("");
   const [secondaryEnd, setSecondaryEnd] = useState("");
 
-  const parseEducation = (value: string) => {
-    const [degree = "", college = "", cgpa = "", start = "", end = ""] = value.split("|").map((part) => part.trim());
-    return { degree, college, cgpa, start, end };
+  const parseEducation = (
+    value: string,
+    collegeValue?: string | null,
+    cgpaValue?: string | null,
+    startValue?: string | null,
+    endValue?: string | null,
+  ) => {
+    const [degree = "", legacyCollege = "", legacyCgpa = "", legacyStart = "", legacyEnd = ""] = value.split("|").map((part) => part.trim());
+    return {
+      degree,
+      college: collegeValue || legacyCollege,
+      cgpa: cgpaValue || legacyCgpa,
+      start: startValue || legacyStart,
+      end: endValue || legacyEnd,
+    };
   };
 
   useEffect(() => {
     if (profile) {
       setIntro(profile.about_intro || "");
       setDescription(profile.about_description || "");
-      const primary = parseEducation(profile.about_education_primary || "");
-      const secondary = parseEducation(profile.about_education_secondary || "");
+      const primary = parseEducation(
+        profile.about_education_primary || "",
+        profile.about_education_primary_college,
+        profile.about_education_primary_cgpa,
+        profile.about_education_primary_start,
+        profile.about_education_primary_end,
+      );
+      const secondary = parseEducation(
+        profile.about_education_secondary || "",
+        profile.about_education_secondary_college,
+        profile.about_education_secondary_cgpa,
+        profile.about_education_secondary_start,
+        profile.about_education_secondary_end,
+      );
       setEducationPrimary(primary.degree);
       setEducationSecondary(secondary.degree);
       setPrimaryCollege(primary.college);
@@ -109,42 +133,62 @@ export function AboutTextDialog({ open, onClose }: AboutTextDialogProps) {
         </div>
 
         <div className="form-grid-2 education-form-grid">
-          <div className="form-group">
-            <label className="form-label-enhanced">
-              <span className="form-label-icon"><GraduationCap size={14} /></span>
+          <div className="education-entry">
+            <h4 className="education-entry-title">
+              <GraduationCap size={16} />
               Primary Education
-            </label>
+            </h4>
+            <label className="education-field-label" htmlFor="primary-degree">Degree / Course</label>
             <input
+              id="primary-degree"
               type="text"
               className="form-input-enhanced"
               value={educationPrimary}
               onChange={(e) => setEducationPrimary(e.target.value)}
-              placeholder="Degree, e.g. B.Tech in IT"
+              placeholder="e.g. B.Sc. Computer Science"
             />
-            <input type="text" className="form-input-enhanced" value={primaryCollege} onChange={(e) => setPrimaryCollege(e.target.value)} placeholder="College / University" />
-            <input type="text" className="form-input-enhanced" value={primaryCgpa} onChange={(e) => setPrimaryCgpa(e.target.value)} placeholder="CGPA / Grade" />
-            <div className="form-grid-2">
-              <input type="text" className="form-input-enhanced" value={primaryStart} onChange={(e) => setPrimaryStart(e.target.value)} placeholder="Starting year" />
-              <input type="text" className="form-input-enhanced" value={primaryEnd} onChange={(e) => setPrimaryEnd(e.target.value)} placeholder="Ending year" />
+            <label className="education-field-label" htmlFor="primary-college">College / University</label>
+            <input id="primary-college" type="text" className="form-input-enhanced" value={primaryCollege} onChange={(e) => setPrimaryCollege(e.target.value)} placeholder="College / University name" />
+            <label className="education-field-label" htmlFor="primary-cgpa">CGPA / Grade</label>
+            <input id="primary-cgpa" type="text" className="form-input-enhanced" value={primaryCgpa} onChange={(e) => setPrimaryCgpa(e.target.value)} placeholder="e.g. 8.5 / 10" />
+            <div className="education-date-fields">
+              <div>
+                <label className="education-field-label" htmlFor="primary-start">Start year</label>
+                <input id="primary-start" type="text" className="form-input-enhanced" value={primaryStart} onChange={(e) => setPrimaryStart(e.target.value)} placeholder="2022" />
+              </div>
+              <div>
+                <label className="education-field-label" htmlFor="primary-end">End year</label>
+                <input id="primary-end" type="text" className="form-input-enhanced" value={primaryEnd} onChange={(e) => setPrimaryEnd(e.target.value)} placeholder="2025" />
+              </div>
             </div>
           </div>
-          <div className="form-group">
-            <label className="form-label-enhanced">
-              <span className="form-label-icon"><GraduationCap size={14} /></span>
-              Secondary Education / Certs
-            </label>
+          <div className="education-entry">
+            <h4 className="education-entry-title">
+              <GraduationCap size={16} />
+              Secondary Education
+            </h4>
+            <label className="education-field-label" htmlFor="secondary-degree">Degree / Course</label>
             <input
+              id="secondary-degree"
               type="text"
               className="form-input-enhanced"
               value={educationSecondary}
               onChange={(e) => setEducationSecondary(e.target.value)}
-              placeholder="Degree / Certification"
+              placeholder="e.g. Higher Secondary Certificate"
             />
-            <input type="text" className="form-input-enhanced" value={secondaryCollege} onChange={(e) => setSecondaryCollege(e.target.value)} placeholder="College / Institute" />
-            <input type="text" className="form-input-enhanced" value={secondaryCgpa} onChange={(e) => setSecondaryCgpa(e.target.value)} placeholder="CGPA / Grade" />
-            <div className="form-grid-2">
-              <input type="text" className="form-input-enhanced" value={secondaryStart} onChange={(e) => setSecondaryStart(e.target.value)} placeholder="Starting year" />
-              <input type="text" className="form-input-enhanced" value={secondaryEnd} onChange={(e) => setSecondaryEnd(e.target.value)} placeholder="Ending year" />
+            <label className="education-field-label" htmlFor="secondary-college">College / Institute</label>
+            <input id="secondary-college" type="text" className="form-input-enhanced" value={secondaryCollege} onChange={(e) => setSecondaryCollege(e.target.value)} placeholder="College / Institute name" />
+            <label className="education-field-label" htmlFor="secondary-cgpa">CGPA / Grade</label>
+            <input id="secondary-cgpa" type="text" className="form-input-enhanced" value={secondaryCgpa} onChange={(e) => setSecondaryCgpa(e.target.value)} placeholder="e.g. 78%" />
+            <div className="education-date-fields">
+              <div>
+                <label className="education-field-label" htmlFor="secondary-start">Start year</label>
+                <input id="secondary-start" type="text" className="form-input-enhanced" value={secondaryStart} onChange={(e) => setSecondaryStart(e.target.value)} placeholder="2020" />
+              </div>
+              <div>
+                <label className="education-field-label" htmlFor="secondary-end">End year</label>
+                <input id="secondary-end" type="text" className="form-input-enhanced" value={secondaryEnd} onChange={(e) => setSecondaryEnd(e.target.value)} placeholder="2022" />
+              </div>
             </div>
           </div>
         </div>
