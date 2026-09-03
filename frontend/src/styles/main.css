@@ -7157,11 +7157,13 @@ select:focus-visible {
 
 .image-upload-change {
   background: rgba(255, 255, 255, 0.9);
-  color: var(--color-foreground);
+  color: #0f172a;
+  text-shadow: none;
 }
 
 .image-upload-change:hover {
   background: white;
+  color: #0f172a;
 }
 
 .image-upload-dropzone {
