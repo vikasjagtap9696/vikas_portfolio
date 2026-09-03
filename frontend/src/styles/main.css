@@ -6037,6 +6037,11 @@ body {
   object-fit: cover;
 }
 
+.profile-photo-upload .image-upload-preview {
+  aspect-ratio: 1;
+  height: auto;
+}
+
 .image-upload-overlay {
   position: absolute;
   inset: 0;

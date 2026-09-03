@@ -32,7 +32,7 @@ export function ProfilePhotoDialog({ open, onClose }: ProfilePhotoDialogProps) {
             <span className="form-label-icon">📸</span>
             Profile Photo
           </label>
-          <div style={{ maxWidth: '300px', margin: '0 auto' }}>
+          <div className="profile-photo-upload" style={{ maxWidth: '300px', margin: '0 auto' }}>
             <ImageUpload
               value={profile?.avatar_url || ""}
               onChange={handlePhotoChange}

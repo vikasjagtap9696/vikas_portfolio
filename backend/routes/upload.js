@@ -3,11 +3,15 @@ const router = express.Router();
 const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+if (process.env.CLOUDINARY_URL) {
+    cloudinary.config({ cloudinary_url: process.env.CLOUDINARY_URL });
+} else {
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+}
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -19,7 +23,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    if (!process.env.CLOUDINARY_URL && (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET)) {
         return res.status(503).json({ error: 'Cloudinary storage is not configured' });
     }
 

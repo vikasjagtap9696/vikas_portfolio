@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { uploadApi } from "@/services/api";
 import { Upload, X, Image, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -14,7 +14,12 @@ interface ImageUploadProps {
 export function ImageUpload({ value, onChange, bucket, folder = "", placeholder = "Upload Image" }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [value]);
 
   const handleUpload = async (file: File) => {
     if (!file) return;
@@ -77,9 +82,9 @@ export function ImageUpload({ value, onChange, bucket, folder = "", placeholder 
 
   return (
     <div className="image-upload-container">
-      {value ? (
+      {value && !imageError ? (
         <div className="image-upload-preview">
-          <img src={value} alt="Preview" />
+          <img src={value} alt="Preview" onError={() => setImageError(true)} />
           <div className="image-upload-overlay">
             <button
               type="button"

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { Link } from "react-router-dom";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -77,7 +76,6 @@ export function Navbar() {
               {item.label}
             </a>
           ))}
-          <ThemeToggle />
           <button
             onClick={() => handleNavClick("#contact")}
             className="btn btn-primary"
@@ -88,7 +86,6 @@ export function Navbar() {
 
         {/* Mobile Menu Button */}
         <div className="mobile-nav-actions">
-          <ThemeToggle />
           <button
             className="mobile-menu-btn"
             onClick={() => setIsOpen(!isOpen)}
