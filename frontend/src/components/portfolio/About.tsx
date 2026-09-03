@@ -127,9 +127,9 @@ export function About() {
               <div className="flex flex-col gap-3">
                 <div>
                   <p className="font-medium">{primaryEdu.title}</p>
-                  {primaryEdu.college && <p className="text-muted text-sm">{primaryEdu.college}</p>}
+                  {primaryEdu.college && <p className="about-education-detail text-sm">{primaryEdu.college}</p>}
                   {(primaryEdu.cgpa || primaryEdu.start || primaryEdu.end) && (
-                    <p className="text-muted text-sm about-education-meta">
+                    <p className="about-education-detail text-sm about-education-meta">
                       {primaryEdu.cgpa && `CGPA: ${primaryEdu.cgpa}`}
                       {(primaryEdu.start || primaryEdu.end) && ` | ${primaryEdu.start || ""} - ${primaryEdu.end || "Present"}`}
                     </p>
@@ -137,9 +137,9 @@ export function About() {
                 </div>
                 <div>
                   <p className="font-medium">{secondaryEdu.title}</p>
-                  {secondaryEdu.college && <p className="text-muted text-sm">{secondaryEdu.college}</p>}
+                  {secondaryEdu.college && <p className="about-education-detail text-sm">{secondaryEdu.college}</p>}
                   {(secondaryEdu.cgpa || secondaryEdu.start || secondaryEdu.end) && (
-                    <p className="text-muted text-sm about-education-meta">
+                    <p className="about-education-detail text-sm about-education-meta">
                       {secondaryEdu.cgpa && `CGPA: ${secondaryEdu.cgpa}`}
                       {(secondaryEdu.start || secondaryEdu.end) && ` | ${secondaryEdu.start || ""} - ${secondaryEdu.end || "Present"}`}
                     </p>

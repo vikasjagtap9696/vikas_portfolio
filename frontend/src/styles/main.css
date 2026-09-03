@@ -2075,6 +2075,11 @@ h4 {
   margin-top: 0.25rem;
 }
 
+.about-education-detail {
+  color: var(--color-foreground);
+  opacity: 0.78;
+}
+
 .education-form-grid .form-input-enhanced {
   margin-top: var(--spacing-2);
 }
