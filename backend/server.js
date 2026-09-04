@@ -35,6 +35,10 @@ app.get('/', (req, res) => {
     res.send('Welcome to Vikas Portfolio API');
 });
 
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
 // Import Routes
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
