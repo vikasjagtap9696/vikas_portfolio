@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCertificates } from "@/hooks/useCertificates";
 import { useAuth } from "@/contexts/AuthContext";
 import { CertificatesManageDialog } from "@/components/admin/CertificatesManageDialog";
@@ -10,7 +10,28 @@ export function Certificates() {
   const { certificates, loading } = useCertificates();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const certificatesGridRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const grid = certificatesGridRef.current;
+    if (mobileQuery.matches && grid) grid.scrollLeft = 0;
+
+    const autoSlide = () => {
+      const currentGrid = certificatesGridRef.current;
+      if (!mobileQuery.matches || !currentGrid) return;
+
+      const isAtEnd = currentGrid.scrollLeft + currentGrid.clientWidth >= currentGrid.scrollWidth - 8;
+      currentGrid.scrollTo({
+        left: isAtEnd ? 0 : currentGrid.scrollLeft + currentGrid.clientWidth,
+        behavior: "smooth",
+      });
+    };
+
+    const intervalId = window.setInterval(autoSlide, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [certificates.length]);
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "";
@@ -112,7 +133,7 @@ export function Certificates() {
         </div>
 
         {loading ? (
-          <div className="certificates-grid">
+          <div ref={certificatesGridRef} className="certificates-grid">
             {[1, 2, 3].map((i) => (
               <SkeletonCard key={i} />
             ))}
@@ -120,7 +141,11 @@ export function Certificates() {
         ) : certificates.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className={`certificates-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
+          <div
+            ref={certificatesGridRef}
+            className={`certificates-grid stagger-scale ${isVisible ? 'visible' : ''}`}
+            aria-label="Professional certificates"
+          >
             {certificates.map((cert, index) => (
               <div
                 key={cert.id}

@@ -12,13 +12,15 @@ export function Projects() {
   const { data: profileSettings } = useProfileSettings();
   const [showDialog, setShowDialog] = useState(false);
   const [projectViewMode, setProjectViewMode] = useState<"list" | "carousel">("carousel");
-  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const projectsGridRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
   const isVisible = true; // Force true for debugging "not seen" issue
 
   useEffect(() => {
-    if (projectViewMode !== "carousel" || isCarouselPaused || projects.length < 2) return;
+    if (projectViewMode !== "carousel" || projects.length < 2) return;
+
+    const grid = projectsGridRef.current;
+    if (grid) grid.scrollLeft = 0;
 
     const interval = window.setInterval(() => {
       const grid = projectsGridRef.current;
@@ -33,7 +35,7 @@ export function Projects() {
     }, 3500);
 
     return () => window.clearInterval(interval);
-  }, [isCarouselPaused, projectViewMode, projects.length]);
+  }, [projectViewMode, projects.length]);
 
   // Ensure tech_stack is an array
   const getTechStack = (tech: any): string[] => {
@@ -181,8 +183,7 @@ export function Projects() {
           <div
             ref={projectsGridRef}
             className={`projects-grid ${projectViewMode === "carousel" ? "projects-grid-carousel" : ""} stagger-wave visible`}
-            onMouseEnter={() => setIsCarouselPaused(true)}
-            onMouseLeave={() => setIsCarouselPaused(false)}
+            aria-label="Featured projects"
           >
             {featuredProjects.map((project, index) => (
               <div

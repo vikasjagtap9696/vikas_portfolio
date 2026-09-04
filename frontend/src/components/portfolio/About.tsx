@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 import { useAuth } from "@/contexts/AuthContext";
 import { AboutTextDialog } from "@/components/admin/AboutTextDialog";
@@ -12,7 +12,28 @@ export function About() {
   const { data: profileSettings } = useProfileSettings();
   const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState<string | null>(null);
+  const aboutGridRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const grid = aboutGridRef.current;
+    if (mobileQuery.matches && grid) grid.scrollLeft = 0;
+
+    const autoSlide = () => {
+      const currentGrid = aboutGridRef.current;
+      if (!mobileQuery.matches || !currentGrid) return;
+
+      const isAtEnd = currentGrid.scrollLeft + currentGrid.clientWidth >= currentGrid.scrollWidth - 8;
+      currentGrid.scrollTo({
+        left: isAtEnd ? 0 : currentGrid.scrollLeft + currentGrid.clientWidth,
+        behavior: "smooth",
+      });
+    };
+
+    const intervalId = window.setInterval(autoSlide, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [isVisible]);
 
   const careerGoals = profileSettings?.career_goals || [];
   const whatIDo = profileSettings?.what_i_do || [];
@@ -94,7 +115,11 @@ export function About() {
 
        
 
-        <div className={`about-grid stagger-alternate ${isVisible ? 'visible' : ''}`}>
+        <div
+          ref={aboutGridRef}
+          className={`about-grid stagger-alternate ${isVisible ? 'visible' : ''}`}
+          aria-label="About me details"
+        >
           {/* Left Column */}
           <div className="flex flex-col gap-6">
             {/* Who I Am */}

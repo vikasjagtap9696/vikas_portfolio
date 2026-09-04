@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSkills, Skill } from "@/hooks/useSkills";
 import { useAuth } from "@/contexts/AuthContext";
 import { SkillsManageDialog } from "@/components/admin/SkillsManageDialog";
@@ -51,10 +51,30 @@ export function Skills() {
   const { skills: dbSkills } = useSkills();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
-  const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
-
-  const isVisible = true; // Force true for debugging "not seen" issue
+  const skillsGridRef = useRef<HTMLDivElement>(null);
   const skills = dbSkills || [];
+  const { ref: sectionRef, isVisible: scrollIsVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
+  const isVisible = scrollIsVisible;
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const grid = skillsGridRef.current;
+    if (mobileQuery.matches && grid) grid.scrollLeft = 0;
+
+    const autoSlide = () => {
+      const currentGrid = skillsGridRef.current;
+      if (!mobileQuery.matches || !currentGrid) return;
+
+      const isAtEnd = currentGrid.scrollLeft + currentGrid.clientWidth >= currentGrid.scrollWidth - 8;
+      currentGrid.scrollTo({
+        left: isAtEnd ? 0 : currentGrid.scrollLeft + currentGrid.clientWidth,
+        behavior: "smooth",
+      });
+    };
+
+    const intervalId = window.setInterval(autoSlide, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [isVisible, skills.length]);
 
   // Group skills by category
   const skillsByCategory = skills.reduce((acc, skill) => {
@@ -143,7 +163,11 @@ export function Skills() {
             )}
           </div>
         ) : (
-        <div className={`skills-grid stagger-scale ${isVisible ? 'visible' : ''}`}>
+        <div
+          ref={skillsGridRef}
+          className={`skills-grid stagger-scale ${isVisible ? 'visible' : ''}`}
+          aria-label="Skills by category"
+        >
           {Object.entries(skillsByCategory).map(([category, categorySkills], index) => {
             const config = categoryConfig[category] || { color: "primary" };
 

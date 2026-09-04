@@ -2048,6 +2048,32 @@ h4 {
   border-radius: var(--radius-xl);
 }
 
+@media (max-width: 767px) {
+  .about-grid {
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    padding: 0 var(--spacing-4) var(--spacing-3);
+    margin: 0 calc(var(--spacing-4) * -1);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .about-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-grid > .flex {
+    display: contents;
+  }
+
+  .about-grid .about-card {
+    flex: 0 0 calc(100vw - (var(--spacing-4) * 2));
+    scroll-snap-align: center;
+  }
+}
+
 .about-card-header {
   display: flex;
   align-items: center;
@@ -2184,6 +2210,28 @@ h4 {
 .skills-grid {
   display: grid;
   gap: var(--spacing-8);
+}
+
+@media (max-width: 767px) {
+  .skills-grid {
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    padding: 0 var(--spacing-4) var(--spacing-3);
+    margin: 0 calc(var(--spacing-4) * -1);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .skills-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .skills-grid .skill-category {
+    flex: 0 0 calc(100vw - (var(--spacing-4) * 2));
+    scroll-snap-align: center;
+  }
 }
 
 @media (min-width: 768px) {
@@ -2467,6 +2515,40 @@ h4 {
   margin: 0 auto;
 }
 
+@media (max-width: 767px) {
+  .timeline {
+    display: flex;
+    gap: var(--spacing-4);
+    max-width: none;
+    overflow-x: auto;
+    padding: 0 var(--spacing-4) var(--spacing-3);
+    margin: 0 calc(var(--spacing-4) * -1);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .timeline::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timeline-line,
+  .timeline-dot {
+    display: none;
+  }
+
+  .timeline-item {
+    flex: 0 0 calc(100vw - (var(--spacing-4) * 2));
+    margin-bottom: 0;
+    padding-left: 0;
+    scroll-snap-align: center;
+  }
+
+  .timeline-content {
+    width: 100%;
+  }
+}
+
 .timeline-line {
   position: absolute;
   left: 0;
@@ -2630,6 +2712,28 @@ h4 {
 .certificates-grid {
   display: grid;
   gap: var(--spacing-6);
+}
+
+@media (max-width: 767px) {
+  .certificates-grid {
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    padding: 0 var(--spacing-4) var(--spacing-3);
+    margin: 0 calc(var(--spacing-4) * -1);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .certificates-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .certificates-grid .certificate-card {
+    flex: 0 0 calc(100vw - (var(--spacing-4) * 2));
+    scroll-snap-align: center;
+  }
 }
 
 @media (min-width: 768px) {

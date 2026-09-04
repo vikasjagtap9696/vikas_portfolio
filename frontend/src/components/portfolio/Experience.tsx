@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useExperiences, type Experience as ExperienceType } from "@/hooks/useExperiences";
 import { useAuth } from "@/contexts/AuthContext";
 import { ExperienceManageDialog } from "@/components/admin/ExperienceManageDialog";
@@ -16,9 +16,29 @@ export function Experience() {
   const { experiences: dbExperiences } = useExperiences();
   const { user } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const experiences = dbExperiences || [];
   const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
 
-  const experiences = dbExperiences || [];
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const timeline = timelineRef.current;
+    if (mobileQuery.matches && timeline) timeline.scrollLeft = 0;
+
+    const autoSlide = () => {
+      const currentTimeline = timelineRef.current;
+      if (!mobileQuery.matches || !currentTimeline) return;
+
+      const isAtEnd = currentTimeline.scrollLeft + currentTimeline.clientWidth >= currentTimeline.scrollWidth - 8;
+      currentTimeline.scrollTo({
+        left: isAtEnd ? 0 : currentTimeline.scrollLeft + currentTimeline.clientWidth,
+        behavior: "smooth",
+      });
+    };
+
+    const intervalId = window.setInterval(autoSlide, 5000);
+    return () => window.clearInterval(intervalId);
+  }, [experiences.length]);
 
   return (
     <section ref={sectionRef} id="experience" className={`section relative section-animate-left ${isVisible ? 'visible' : ''}`}>
@@ -94,7 +114,11 @@ export function Experience() {
             )}
           </div>
         ) : (
-        <div className={`timeline stagger-alternate ${isVisible ? 'visible' : ''}`}>
+        <div
+          ref={timelineRef}
+          className={`timeline stagger-alternate ${isVisible ? 'visible' : ''}`}
+          aria-label="Work experience timeline"
+        >
           <div className="timeline-line" />
 
           {experiences.map((exp, index) => (
